@@ -148,7 +148,18 @@ export async function updateUserData(req, res) {
          });
     }
     try {
-        const exists = await User.findOne({ _id:, email:{$ne: req.user} }
+        const exists = await User.findOne({ email, _id: {$ne: req.user} });
+        if (exists) {
+            return res.status(409).json({ 
+                success: false,
+                message: "User already exists"
+             });
+        }
+        const user = await User.findByIdAndUpdate(req.user.id, { name, email }, { new: true, runValidators: true, select: "name email" });
+        res.json({
+            success: true,
+            user
+        });
         
     } catch (error) {
         console.error(error);
@@ -158,3 +169,43 @@ export async function updateUserData(req, res) {
          });
     }
 }
+
+
+//to change password
+export async function updatePassword(req, res) {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword || newPassword.length < 8) {
+        return res.status(400).json({ 
+            success: false,
+            message: "Password is invalid or too short"
+         });
+    }
+    try {
+        const user = await User.findById(req.user.id).select("password");
+        if (!user) {
+            return res.status(404).json({ 
+                success: false,
+                message: "User not found"
+             });
+        }
+        const match = await bcrypt.compare(currentPassword, user.password);
+        if (!match) {
+            return res.status(400).json({ 
+                success: false,
+                message: "Invalid credentials"
+             });
+        }
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+        res.json({
+            success: true,
+            message: "Password changed successfully"
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ 
+            success: false,
+            message: "Server error"
+         });
+    }
+}   
