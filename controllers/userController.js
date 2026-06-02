@@ -7,8 +7,8 @@ import e from "express";
 const JWT_SECRET = 'your_jwt_secret_key';
 const TOKEN_EXPIRY = '24h'; // Token expires in 24 hours
 
-const createteToken = (userId) =>
-    jwt.sign({ id, userId }, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
+const createToken = (userid) =>
+    jwt.sign({id: userid}, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
 
 
 // REGISTER USER
@@ -46,7 +46,7 @@ export async function registerUser(req, res) {
             email,
             password: hashed
         });
-        const token = user.createteToken(user._id);
+        const token = createToken(user._id);
         res.status(201).json({
             success: true,
             token,
@@ -54,11 +54,11 @@ export async function registerUser(req, res) {
                 id: user._id,
                 name: user.name,
                 email: user.email
-            },
+            }
 
         });
     } catch (error) {
-        console; error(error);
+        console.error(error);
         res.status(500).json({
             success: false,
             message: "Server error"
@@ -92,7 +92,7 @@ export async function loginUser(req, res) {
             });
         }
 
-        const token = createteToken(user._id);
+        const token = createToken(user._id);
         res.json({
             success: true,
             token,
@@ -113,9 +113,9 @@ export async function loginUser(req, res) {
 }
 
 // to get user data
-export async function getUserData(req, res) {
+export async function getCurrentUser(req, res) {
     try {
-        const user = await User.findById(req.user.Id).select("name email");
+        const user = await User.findById(req.user.id).select("name email");
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -138,9 +138,9 @@ export async function getUserData(req, res) {
 }
 
 // to update user data
-export async function updateUserData(req, res) {
+export async function updateProfile(req, res) {
     const { name, email } = req.body;
-    const userId = req.userId;
+    
 
     if (!name || !email || !validattor.isEmail(email)) {
         return res.status(400).json({
@@ -149,7 +149,7 @@ export async function updateUserData(req, res) {
         });
     }
     try {
-        const exists = await User.findOne({ email, _id: { $ne: req.user } });
+        const exists = await User.findOne({ email, _id: { $ne: req.user.id } });
         if (exists) {
             return res.status(409).json({
                 success: false,
@@ -191,7 +191,7 @@ export async function updatePassword(req, res) {
         }
         const match = await bcrypt.compare(currentPassword, user.password);
         if (!match) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
                 message: "Invalid credentials"
             });

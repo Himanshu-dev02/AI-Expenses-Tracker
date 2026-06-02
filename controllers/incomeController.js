@@ -1,5 +1,5 @@
 import incomeModel from "../models/incomeModel.js";
-import xlsx from "xlsx";
+import XLSX from "xlsx";
 import getDateRange from "../utils/dateFilter.js";
 
 
@@ -100,19 +100,19 @@ export async function deleteIncome(req, res) {
 
 //to download the data in an excel sheet
 export async function downloadIncomeExcel(req, res) {
-    const userId = req.user.id;
+    const userId = req.user._id;
     try{
         const income = await incomeModel.find({userId}).sort({date: -1});
-        const planeData = income.map((inc) => ({
-            description: inc.description,
-            amount: inc.amount,
-            category: inc.category,
-            date: new Date(inc.date).toLocaleDateString(),
+        const plainData = income.map((inc) => ({
+            Description: inc.description,
+            Amount: inc.amount,
+            Category: inc.category,
+            Date: new Date(inc.date).toLocaleDateString(),
         }));
-        const worksheet =  XSXL.utils.json_to_sheet(plainData);
-        const workbook = XSXL.utils.book_new();
-        XSXL.utils.book_append_sheet(workbook, worksheet, "IncomeModel");
-       XSXL.writeFile(workbook, "income_details.xlsx");
+        const worksheet =  XLSX.utils.json_to_sheet(plainData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "IncomeModel");
+       XLSX.writeFile(workbook, "income_details.xlsx");
         res.download("income_details.xlsx");
     }catch(error){
         console.log(error);
@@ -123,3 +123,43 @@ export async function downloadIncomeExcel(req, res) {
 }
 
 //to get income overview
+export async function getIncomeOverview(req, res) {
+    try{
+        const userId = req.user.id;
+        const {range = "monthly"} = req.query;
+        const {start, end} = getDateRange(range);
+
+        const income = await incomeModel.find({
+            userId,
+            date: {
+                $gte: start,
+                $lte: end
+            },
+        }).sort({date: -1});
+        
+
+const totalIncome = incomes.reduce((acc, cur) => acc + cur.amount, 0);
+const averageIncome = incomes.length > 0 ? totalIncome / incomes.length : 0;
+const numberOfTransactions = incomes.length;
+
+const recentTransactions = incomes.slice(0, 9);
+
+res.json({
+    success: true,
+    data: {
+        totalIncome,
+        averageIncome,
+        numberOfTransactions,
+        recentTransactions,
+        range
+    }
+});
+    }
+
+    catch(error){
+        console.log(error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to get income overview" });
+    }
+}
