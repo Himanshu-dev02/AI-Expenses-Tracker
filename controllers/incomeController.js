@@ -27,6 +27,7 @@ export async function addIncome(req, res) {
                 success: true,
                 message: "Income added successfully" });
         }catch(error){
+            console.log(error);
             res.status(500).json({
                 success: false,
                 message: "Failed to add income" });
