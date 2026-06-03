@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 const expenseSchema = new mongoose.Schema({
     description : {
     type : String,
@@ -26,7 +27,11 @@ const expenseSchema = new mongoose.Schema({
     type: String,
     default: "expense",  
   },
-  timestamps: true
+},
+{
+    timestamps: true
+  
+  
 });
 
 const expenseModel = mongoose.model.expense || mongoose.model("expense", expenseSchema);

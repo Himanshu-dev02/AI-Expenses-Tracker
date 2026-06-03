@@ -1,4 +1,4 @@
-import expenseModel from "../models/expenseModel";
+import expenseModel from "../models/expenseModel.js";
 import getDateRange from "../utils/dateFilter.js";
 import XLSX from "xlsx";
 

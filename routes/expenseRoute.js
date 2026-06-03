@@ -1,12 +1,12 @@
 import e from "express";
-import middleware from "../middleware/auth.js";
+import authMiddleware from "../middleware/auth.js";
 import { addExpense, getAllExpense, updateExpense, downloadExpenseExcel, deleteExpense, getExpenseOverview } from "../controllers/expenseController.js";
 
 const expenseRouter = e.Router();
 
 
 expenseRouter.post("/add", authMiddleware, addExpense);
-expenseRouter.get("/get", authMiddleware, getAllExpenses);
+expenseRouter.get("/get", authMiddleware, getAllExpense);
 
 expenseRouter.put("/update/:id", authMiddleware, updateExpense);
 expenseRouter.get("/downloadexcel", authMiddleware, downloadExpenseExcel);
