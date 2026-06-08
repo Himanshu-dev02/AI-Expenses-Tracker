@@ -41,6 +41,25 @@ const Navbar = ({ user: propUser, onLogout }) => {
 
     const toggleMenu = () => setMenuOpen((prev) => !prev);
 
+    const handleLogout = () => {
+        setMenuOpen(false);
+        localStorage.removeItem("token");
+         onLogout?.();
+        navigate("/login");
+    };
+ // close the menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  
   return (
     <header className={navbarStyles.header}>
       <div className={navbarStyles.container}> 
