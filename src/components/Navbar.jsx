@@ -91,14 +91,14 @@ const Navbar = ({ user: propUser, onLogout }) => {
                                         setMenuOpen(false);
                                         navigate("/profile");
                                     }}className={navbarStyles.menuItem}>
-                                        <user className =" w-4 h-4"/>
+                                        <User className =" w-4 h-4"/>
                                         <span>My profile</span>
 
                                     </button>
                              </div>
                              <div className={navbarStyles.menuItemBorder}>
                                 <button onClick= {handleLogout}className = {navbarStyles.logoutButton} >
-                                    <LogIn className="w-4 h-4"/>
+                                    <LogOut className="w-4 h-4"/>
                                     <span>Logout</span>
                                 </button>
                                 </div>
