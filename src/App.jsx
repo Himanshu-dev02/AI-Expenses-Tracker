@@ -1,7 +1,7 @@
- import React from "react";
- import { Routes, Route } from "react-router-dom";
+ import React, { useState } from "react";
+ import { Routes, Route, useNavigate } from "react-router-dom";
  import Layout from "./components/Layout";
-  import Dashboard from "./pages/Dashboard";
+ import Dashboard from "./pages/Dashboard";
  
  const App = () => {
   const [user, setUser] = useState(null);
@@ -30,9 +30,8 @@
     };
    return (
       <>
-
       <Routes>
-        <Route element={<Layout/>}>
+        <Route element={<Layout user={user} onLogout={handleLogout}/>}>
         <Route path="/" element={<Dashboard/>}/>
         </Route>
       </Routes>
