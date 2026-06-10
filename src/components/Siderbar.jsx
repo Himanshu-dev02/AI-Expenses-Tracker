@@ -1,8 +1,8 @@
 import {useEffect, useState, useRef } from "react";
 import {sidebarStyles,cn} from "../assets/dummyStyles";
-import {motion} from "framer-motion";
+import {motion, AnimatePresence} from "framer-motion";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {ArrowUp, ArrowDown, Home, User } from 'lucide-react';
+import {ArrowUp, ArrowDown, Home, User, HelpCircle, LogOut, X, Menu } from 'lucide-react';
 
 const MENU_ITEMS = [
   { text: "Dashboard", path: "/", icon: <Home size={20} /> },
@@ -19,7 +19,7 @@ const Sidebar = ({user, isCollapsed, setIsCollapsed}) => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const[activeHover, setActiveHover] = useState(null);
     
-    const {naeme: userName = "User", email = "user@example.com"} = user || {};
+    const {name: userName = "User", email = "user@example.com"} = user || {};
     const intial = userName.charAt(0).toUpperCase();
 
     //to check for overflow in moblie
@@ -85,7 +85,7 @@ const toggleSidebar = () => setIsCollapsed((c) => !c);
     initial={{ x: -100, opacity: 0 }}
     animate={{ x: 0, opacity: 1, width: isCollapsed ? 80 : 256}}
     
-    transation={{ type: "spring",  damping: 25 }}
+    transition={{ type: "spring",  damping: 25 }}
 >
   <div className={sidebarStyles.sidebarInner.base}>
     <button onClick={toggleSidebar} className={sidebarStyles.toggleButton.base}>
@@ -102,7 +102,8 @@ const toggleSidebar = () => setIsCollapsed((c) => !c);
                    stroke="currentColor"
                     strokeWidth="2" 
                     strokeLinecap="round"
-                     strokeLinejoin="round">
+                     strokeLinejoin="round"
+                     className="w-4 h-4 text-gray-500">
                 <polyline points={isCollapsed ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
               </svg>
             </motion.div>
@@ -129,9 +130,9 @@ const toggleSidebar = () => setIsCollapsed((c) => !c);
         </div>
         </div>
         <div className="flex-1 overflow-y-auto py-4 custom-scrollbar">
-        <ul className={sidebarStyles.menuList.base}
+        <ul className={sidebarStyles.menuList.base}>
         {MENU_ITEMS.map(renderMenuItem)}
-        ></ul>
+        </ul>
 
         </div>
 <div className={cn(sidebarStyles.footerContainer.base,
@@ -141,14 +142,117 @@ const toggleSidebar = () => setIsCollapsed((c) => !c);
               className={cn(sidebarStyles.footerLink.base,
                isCollapsed && sidebarStyles.footerLink.collapsed,)}
                to="https://himanshumeshram.netlify.app/#contact">
+
+                <HelpCircle size={20} className="text-gray-500"/>
+                {!isCollapsed && <span>Contact Support</span>}
               </Link>
+              <button onClick={handleLogout} className={cn(sidebarStyles.logoutButton.base,
+                isCollapsed && sidebarStyles.logoutButton.collapsed)}>
+          
+                <LogOut size={20} className="text-gray-500"/>
+                {!isCollapsed && <span>Logout</span>}
+
+              </button>
 
 </div>
   </div>
 
 </motion.div>
+<motion.button onClick={()=> setMobileOpen((prev) => !prev)}
+               className={sidebarStyles.mobileMenuButton}
+               whileHover={{ scale: 1.05 }}
+               whileTap={{ scale: 0.95 }}
+    >
+      <Menu size={24} />
+    </motion.button>
+    <AnimatePresence>
+    {mobileOpen && (
+     <motion.div
+            className={sidebarStyles.mobileOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className={sidebarStyles.mobileBackdrop}
+              onClick={() => setMobileOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            
+            <motion.div
+              ref={sidebarRef}
+              className={sidebarStyles.mobileSidebar.base}
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            >
+           <div className="relative h-full flex flex-col">
+            <div className={sidebarStyles.mobileHeader}>
+                <div className={sidebarStyles.mobileUserContainer}>
+                    <div className={sidebarStyles.userInitials.base}>{intial}</div>
+                    <div>
+                        <h2 className="text-lg font-bold text-gray-800">{userName}</h2>
+                        <p className="text-sm text-gray-500">{email}</p>
+
+                    </div>
+
+                </div>
+                <button onClick={() => setMobileOpen(false)} className={sidebarStyles.mobileCloseButton}>
+                    <X size={20} className="text-gray-500" />
+                </button>
+            </div>
+         <div className="flex-1 overflow-y-auto py-4">
+         <ul className={sidebarStyles.mobileMenuList}>
+                    {MENU_ITEMS.map(({ text, path, icon }) => (
+                      <motion.div key={text} whileTap={{ scale: 0.98 }}>
+                        <Link
+                          to={path}
+                          onClick={() => setMobileOpen(false)}
+                          className={cn(
+                            sidebarStyles.mobileMenuItem.base,
+                            pathname === path 
+                              ? sidebarStyles.mobileMenuItem.active 
+                              : sidebarStyles.mobileMenuItem.inactive
+                          )}
+                        >
+                          <span className={pathname === path ? sidebarStyles.menuIcon.active : sidebarStyles.menuIcon.inactive}>
+                            {icon}
+                          </span>
+                          <span>{text}</span>
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </ul>
+         </div>
+          <div className={sidebarStyles.mobileFooter}>
+            <Link
+            onClick={() => setMobileOpen(false)}
+            to="https://himanshumeshram.netlify.app/#contact"
+            className={sidebarStyles.mobileFooterLink}
+            >
+              <HelpCircle size={20} className="text-gray-500"/>
+              <span>Contact Support</span>
+            </Link>
+            <button onClick={handleLogout} className={sidebarStyles.mobileLogoutButton}>
+              <LogOut size={20} className="text-gray-500"/>
+              <span>Logout</span>
+
+            </button>
+
+          </div>
+
+           </div>
+
+            </motion.div>
+          </motion.div>
+
+    )}
+    </AnimatePresence>
 </> 
-)
-}
+);
+};
 
 export default Sidebar;
