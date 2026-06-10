@@ -1,7 +1,8 @@
-import React from "react";
+import React,{ useState } from "react";
 import {styles} from "../assets/dummyStyles";
 import Navbar from "./Navbar";
-import { Outlet } from "react-router-dom";
+ 
+import Sidebar from "./Siderbar";
 
 
 const Layout = ({ onLogout, user }) => {
