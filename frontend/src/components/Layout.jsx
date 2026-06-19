@@ -4,7 +4,8 @@ import {styles} from "../assets/dummyStyles";
 import Navbar from "./Navbar";
  
 import Sidebar from "./Siderbar";
-import { ArrowUp, ArrowDown, Activity, Car, CreditCard, DollarSign, Gift, Home, PiggyBank, ShoppingCart, TrendingUp, Utensils, Zap } from "lucide-react";
+import { ArrowUp, ArrowDown, Activity, Car, CreditCard, DollarSign, Gift, Home, PiggyBank, ShoppingCart, TrendingUp, Utensils, Zap, RefreshCw, Clock } from "lucide-react";
+import { Outlet } from "react-router-dom";
 
 
 const API_BASE_URL = "http://localhost:4000/api";
@@ -394,14 +395,61 @@ const Layout = ({ onLogout, user }) => {
                 <div className={styles.cards.header}>
                   <h3 className={styles.cards.title}><TrendingUp className="w-6 h-6 text-teal-500"/>
                    Financial Overview
+                   <span className= "text-sm text-gray-500 font-normal">
+                    {{timeFrameLabel}}
+                   </span>
                   </h3>
 
                 </div>
-
+               <Outlet context={outletContext}/>
               </div>
 
             </div>
+            {/* right side*/}
+            <div className={styles.grid.rightColumn}>
+              <div className={styles.cards.base}>
+                <div className={styles.transactions.cardHeader}>
+                  <h3 className={styles.transactions.cardTitle}>
+                    <Clock className="w-6 h-6 text-orange-500"/>
+                    Recent Transactions
+                  </h3>
+                  <button onClick={fetchTransactions} disabled={loading} 
+                  className={styles.transactions.refreshButton}>
+                    <RefreshCw className={styles.transactions.refreshIcon(loading)}/>
+                  </button>
+                </div>
+                  
+                  <div className={styles.transactions.dataStackingInfo}>
+                    <info className={styles.transactions.dataStackingIcon}/>
+                    <span>
+                      Transactions are stacked by dtae (newest first)
+                    </span>
+                  </div>
+                   <div className={styles.transactions.listencontainer}>
+                    {displayedTransactions.map((transaction) => {
+                      const{id, description, amount, date, category, type} = transaction;
+                      return(
+                        <div key={id} 
+                        className={styles.transactions.transactionItem}
+                        >
+                          <div className="flex items-centre gap-1 md:gap-4 lg:gap-3">
+                          <div 
+                          className={`p-2 rounded-lg ${styles.colors.transaction.bg(type)}`}>
+                          {CATEGORY_ICONS[category] || (<DollarSign className={styles.transactions.icon}/>
+                        )}
+                         </div>
 
+                         <div >
+
+                         </div>
+                          </div>
+                          
+                           </div>
+                      )
+                    })}
+                   </div>
+              </div>
+            </div>
           </div>
         </div>
         
