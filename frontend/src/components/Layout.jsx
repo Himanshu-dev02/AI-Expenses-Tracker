@@ -376,7 +376,7 @@ const Layout = ({ onLogout, user }) => {
                 <div>
                   <p className={styles.statCards.cardTitle}>Saving Rate</p>
                   <p className={styles.statCards.cardValue}>$
-                    {stats.savingsRate}%
+                    {stats.sacvingsRate}%
                      </p>
                 </div>
                 <div className={styles.statCards.iconContainer("blue")}>
@@ -498,7 +498,7 @@ const Layout = ({ onLogout, user }) => {
                 </h3>
                <div className={styles.categories.list}>
                 {topCategories.map(([category, amount]) => (
-                  <div key={category} className={styles.categories.categoryitem}>
+                  <div key={ctaegory} className={styles.categories.categoryitem}>
                     <div className= "flex items-centre gap-3">
                       <div className={styles.categories.categoryIconContainer}>
                         {CATEGORY_ICONS[category] || (
