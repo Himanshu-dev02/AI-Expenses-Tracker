@@ -3,6 +3,7 @@
  import Layout from "./components/Layout";
  import Dashboard from "./pages/Dashboard";
  import Login from "./components/Login";
+ import Signup from "./components/signup";
  
  const App = () => {
   const [user, setUser] = useState(null);
@@ -50,6 +51,11 @@
      navigate("/");
    };
 
+   const handleSignup =(userData, remember = false, tokenFromApi = null) => {
+    persistAuth(userData, tokenFromApi, remember);
+    navigate("/");
+  };
+
     const handleLogout = () => {
       clearAuth();
       navigate("/login");
@@ -59,7 +65,7 @@
       <Routes>
  
        <Route path="/login" element={<Login onLogin={handleLogin}/> }/>
-
+      <Route path="/Signup" element={<Signup onSignup={handleSignup}/>}/>
         <Route element={<Layout user={user} onLogout={handleLogout}/>}>
         <Route path="/" element={<Dashboard/>}/>
         </Route>
