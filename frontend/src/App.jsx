@@ -1,10 +1,32 @@
- import React, { useState } from "react";
+ import React, { Children, useState } from "react";
  import { Routes, Route, useNavigate } from "react-router-dom";
  import Layout from "./components/Layout";
  import Dashboard from "./pages/Dashboard";
  import Login from "./components/Login";
  import Signup from "./components/signup";
  
+
+ const API_URL = "http://localhost:4000";
+
+ // to get transaction from localstorage
+ const getTransacttionsFromStorage =() => {
+    const saved = localStorage.getItem("transactions");
+    return saved ? JSON.parse(saved) : [];
+ };
+
+  // to protect th routes 
+  const ProtectedRoute = ({user, Children}) => {
+    const localToken = localStorage.getItem("token");
+    const sessionToken = sessionStorage.getItem("token");
+    const hasToken =localToken || sessionToken;
+
+    if (!user ||  !hasToken){
+      return <Navigate to="/login" replace />;
+    }
+    return Children;
+
+  };
+
  const App = () => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
