@@ -1,5 +1,5 @@
  import React, { Children, useEffect, useState } from "react";
- import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+ import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
  import Layout from "./components/Layout";
  import Dashboard from "./pages/Dashboard";
  import Login from "./components/Login";
@@ -211,7 +211,7 @@ import axios from "axios";
           <Layout user={user} onLogout={handleLogout}/>
           </ProtectedRoute>}>
         <Route path="/" element={<Dashboard/>}
-         transactions={transactions}
+         transactions={transaction}
         addTransaction={ addTransaction}
          editTransaction={editTransaction}
          deleteTransaction={deleteTransaction}
