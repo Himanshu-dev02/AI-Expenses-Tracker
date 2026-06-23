@@ -1,9 +1,10 @@
- import React, { Children, useState } from "react";
- import { Routes, Route, useNavigate } from "react-router-dom";
+ import React, { Children, useEffect, useState } from "react";
+ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
  import Layout from "./components/Layout";
  import Dashboard from "./pages/Dashboard";
  import Login from "./components/Login";
  import Signup from "./components/signup";
+import axios from "axios";
  
 
  const API_URL = "http://localhost:4000";
@@ -14,7 +15,7 @@
     return saved ? JSON.parse(saved) : [];
  };
 
-  // to protect th routes 
+  // to protect the routes 
   const ProtectedRoute = ({user, Children}) => {
     const localToken = localStorage.getItem("token");
     const sessionToken = sessionStorage.getItem("token");
@@ -27,9 +28,22 @@
 
   };
 
+  // to scroll to top when page gets reload or new page is visited
+  const ScrollToTop = () => {
+    const location = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto"});
+     }, [location.pathname] );
+     return null;
+  };
+  
+
+
  const App = () => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [ transaction, setTransactions] = useState ([]);
+  const [isLoading, setIsLoading] = useState (true);
   const navigate = useNavigate();
 
 
@@ -68,6 +82,84 @@
     setToken(null);
   };
 
+   // to update user data both in state and storage 
+   const updateUserData = ( updateUser) => {
+     setUser(updateuser);
+
+     const localToken = localStorage.getItem("token");
+     const sessionToken = sessionStorage.getItem("token");
+     
+     if (localStorage){
+      localStorage.setItem("user" , JSON.stringify(updateUser));
+     } else if (sessionToken) {
+      sessionStorage.setItem("user", JSON.stringify(updateUser));
+     }
+   };
+
+   // try to load user with token when mounted 
+   useEffect(() => {
+    (async () => {
+      try {
+        const localUserRaw = localStorage.getItem("user");
+        const sessionUserRaw = sessionStorage.getItem("user");
+        const localToken = localStorage.getItem("token");
+        const sessionToken = sessionStorage.getItem("token");
+
+        const storedUser = localUserRaw ? JSON.parse(localUserRaw) : sessionUserRaw ?
+        JSON.parse(sessionUserRaw) : null;
+        const storedtoken = localToken || sessionToken || null;
+        const tokenFromLocal = !!localToken;
+        if(storedUser){
+          setUser(storedUser);
+          setToken(storedUser);
+          setIsLoading(false);
+          return ;
+        }
+
+        if (storedtoken){
+          try {
+            const res = await axios.get (`${API_URL}/api/user/me`, {
+              headers: {Authorization: `Bearer ${storedtoken}`}
+            });
+
+            const profile = res.data;
+            persistAuth(profile, storedToken, tokenFromLocal);
+          }
+           catch (fetchErr) {
+            console.warn("Could not fetch profile with the stored token:",
+              fetchErr
+            );
+            clearAuth();
+          }
+        }
+        
+      } catch (error) {
+       console.error( "error bootstrapping auth:", err);
+      } finally {
+        setIsLoading (false);
+
+        try {
+          setTransactions(getTransacttionsFromStorage());
+          
+        } catch (txtErr) {
+          console.error("Error loading transactions:",txtErr);
+          
+        }
+      }
+    })();
+   },[]);
+
+
+   useEffect(() => {
+    try {
+      localStorage.setItem("transaction", JSON.stringify(transaction));
+      
+    } catch (err) {
+      console.error("error saving transactions:",err);
+      
+    }
+   }, [transaction]);
+
    const handleLogin = (userData, remember = false, tokenFromApi = null) => {
      persistAuth(userData, tokenFromApi, remember);
      navigate("/");
@@ -82,14 +174,49 @@
       clearAuth();
       navigate("/login");
     };
+
+    
+  // transaction helpers
+  const addTransaction = (newTransaction) =>
+    setTransactions((p) => [newTransaction, ...p]);
+  const editTransaction = (id, updatedTransaction) =>
+    setTransactions((p) =>
+      p.map((t) => (t.id === id ? { ...updatedTransaction, id } : t)),
+    );
+  const deleteTransaction = (id) =>
+    setTransactions((p) => p.filter((t) => t.id !== id));
+  const refreshTransactions = () =>
+    setTransactions(getTransactionsFromStorage());
+
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+
    return (
       <>
       <Routes>
  
        <Route path="/login" element={<Login onLogin={handleLogin}/> }/>
       <Route path="/Signup" element={<Signup onSignup={handleSignup}/>}/>
-        <Route element={<Layout user={user} onLogout={handleLogout}/>}>
-        <Route path="/" element={<Dashboard/>}/>
+        <Route element={<ProtectedRoute>
+          <Layout user={user} onLogout={handleLogout}/>
+          </ProtectedRoute>}>
+        <Route path="/" element={<Dashboard/>}
+         transactions={transactions}
+        addTransaction={ addTransaction}
+         editTransaction={editTransaction}
+         deleteTransaction={deleteTransaction}
+         refreshTransactions={refreshTransactions}
+         />
         </Route>
       </Routes>
       </>
