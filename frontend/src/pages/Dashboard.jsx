@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from "react"
 import { dashboardStyles, trendStyles, chartStyles } from "../assets/dummyStyles"
 import {GAUGE_COLORS,
    INCOME_CATEGORY_ICONS,
     EXPENSE_CATEGORY_ICONS } from "../assets/color";
 import { useOutletContext } from 'react-router-dom';
+import { getTimeFrameRange, getPreviousTimeFrameRange, calculateData, } from "../components/Helpers";
+import axios from "axios";
+import { Plus } from "lucide-react";
 
     const API_BASE = "http://localhost:4000/api";
 
@@ -300,8 +303,86 @@ const Dashboard = () => {
      useEffect(() => {
       fetchDashboardOverview();
      }, []);
-  return 
-    <div></div>
+
+     // add/ edit or //delete 
+     const handleAddTransaction = async () => {
+      if (!newTransaction.description || !newTransaction.amount) return;
+
+      const payload ={
+        date: toIsoWithClientTime(newTransaction.date),
+        description: newTransaction.description,
+        amount: parseFloat (newTransaction.amount),
+        category: newTransaction.categories,
+      };
+      try {
+      setLoading(true);
+      if (newTransaction.type === "income"){
+        await axios.post(`${API_BASE}/income/add`, payload, {
+          headers: getAuthHeader(),
+        });
+      }  else {
+        await axios.post(`${API_BASE}/expense/add`, payload, {
+          headers: getAuthHeader(),
+        });
+      }    
+      await refreshTransactions();
+      await fetchDashboardOverview();
+      
+      setNewTransaction({
+        date: new Date().toISOString().split("T") [0],
+        description: "",
+        amount: "",
+        type: "expense",
+        category: "Food"
+      });setShowAllModal(false);
+      } catch (err) {
+        console.error(
+          "Failed to add Transactiona:",
+          err?.response || err.message || err,
+        );
+        
+      }finally{
+        setLoading(false);
+      }
+     };
+  return(
+  <div className={dashboardStyles.container}>
+    {/* Header */}
+  <div className={dashboardStyles.headerContainer}>
+    <div className={dashboardStyles.headerContent}>
+      <div>
+        <h1 className={dashboardStyles.headerTitle}>
+           Finance Dashboard
+        </h1>
+        <p className={dashboardStyles.headerSubtitle}>Track your income and expenses</p>
+    </div> <button onClick={() => setShowModal(true)} className={dashboardStyles.addButton}>
+      <Plus size={20}/>
+       Add Transaction
+    </button>
+
+    </div>
+     <div className={dashboardStyles.timeFrameContainer}>
+      <div className={dashboardStyles.timeFrameWrapper}>
+        {["daily", "weekly", "monthly"].map((frame) =>(
+          <button 
+          key={frame}
+          onClick={() => setTimeFrame(frame)}
+          className={dashboardStyles.timeFrameButton(timeFrame === frame)}
+          >
+            {frame.chartAt(0).topperCase() + frame.slice(1)}
+
+          </button>
+        ))}
+
+      </div>
+
+     </div>
+    </div>
+
+  </div>
+
+  )
+    
 };
 
 export default Dashboard;
