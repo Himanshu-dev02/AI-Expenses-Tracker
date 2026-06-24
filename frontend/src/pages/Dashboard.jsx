@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { dashboardStyles, trendStyles, chartStyles } from "../assets/dummyStyles"
 import {GAUGE_COLORS,
    INCOME_CATEGORY_ICONS,
@@ -168,10 +168,140 @@ const Dashboard = () => {
     }));
   }, [filteredTransactions, overviewMeta, timeFrame]);
 
-  // build server-provided recent list
-  return (
+   // build server-provided recent list
+
+   const serverRecent = overviewMeta.recentTransactions || [];
+   const serverRecentIncome = serverRecent
+     .filter((t) => t.type === "income")
+     .sort((a, b) => new Date(b.date) - new Date(a.date));
+   const serverRecentExpense = serverRecent
+     .filter((t) => t.type === "expense")
+     .sort((a, b) => new Date(b.date) - new Date(a.date));
+ 
+   const incomeTransactions = useMemo(
+     () => filteredTransactions
+       .filter((t) => t.type === "income")
+       .sort((a, b) => new Date(b.date) - new Date(a.date)),
+     [filteredTransactions]
+   );
+ 
+   const expenseTransactions = useMemo(
+     () => filteredTransactions
+       .filter((t) => t.type === "expense")
+       .sort((a, b) => new Date(b.date) - new Date(a.date)),
+     [filteredTransactions]
+   );
+ 
+   const incomeListForDisplay =
+     timeFrame === "monthly" && serverRecentIncome.length > 0
+       ? serverRecentIncome
+       : incomeTransactions;
+ 
+   const expenseListForDisplay =
+     timeFrame === "monthly" && serverRecentExpense.length > 0
+       ? serverRecentExpense
+       : expenseTransactions;
+ 
+   const displayedIncome = showAllIncome 
+     ? incomeListForDisplay 
+     : incomeListForDisplay.slice(0, 3); // show 3 then a toggle button
+ 
+   const displayedExpense = showAllExpense 
+     ? expenseListForDisplay 
+     : expenseListForDisplay.slice(0, 3);
+
+
+     //fetch the server-side data
+     const fetchDashboardOverview = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`${API_BASE}/dashboard`,{
+          headers: getAuthHeader(),
+        });
+         
+        if(res?.data?.success){
+           const data = res.data.data;
+           const recent = (data.recentTransactions || []).map((item) => {
+            const typeFromServer =
+              item.type || (item.category ? "expense" : "income");
+            const amountNum = Number(item.amount) || 0;
+  
+            const isoDate = item.date
+              ? new Date(item.date).toISOString()
+              : item.createdAt
+              ? new Date(item.createdAt).toISOString()
+              : new Date().toISOString();
+  
+            return {
+              id: item._id || item.id || Date.now() + Math.random(),
+              date: isoDate,
+              description:
+                item.description ||
+                item.note ||
+                item.title ||
+                (typeFromServer === "income"
+                  ? item.source || "Income"
+                  : item.category || "Expense"),
+              amount: amountNum,
+              type: typeFromServer,
+              category:
+                item.category ||
+                (typeFromServer === "income" ? "Salary" : "Other"),
+              raw: item,
+            };
+          });
+  
+          setOverviewMeta((prev) => ({
+            ...prev,
+            monthlyIncome: Number(data.monthlyIncome || 0),
+            monthlyExpense: Number(data.monthlyExpense || 0),
+            savings:
+              typeof data.savings !== "undefined"
+                ? Number(data.savings)
+                : Number(data.monthlyIncome || 0) - Number(data.monthlyExpense || 0),
+            savingsRate:
+              typeof data.savingsRate !== "undefined" ? data.savingsRate : null,
+            spendByCategory: data.spendByCategory || {},
+            expenseDistribution: data.expenseDistribution || [],
+            recentTransactions: recent,
+          }));
+  
+          if (timeFrame === "monthly") {
+            const monthlyIncome = Number(data.monthlyIncome || 0);
+            const monthlyExpense = Number(data.monthlyExpense || 0);
+            const savings =
+              typeof data.savings !== "undefined"
+                ? Number(data.savings)
+                : monthlyIncome - monthlyExpense;
+  
+            const maxValues = {
+              income: Math.max(monthlyIncome, 5000),
+              expenses: Math.max(monthlyExpense, 3000),
+              savings: Math.max(Math.abs(savings), 2000),
+            };
+  
+            setGaugeData([
+              { name: "Income", value: monthlyIncome, max: maxValues.income },
+              { name: "Spent", value: monthlyExpense, max: maxValues.expenses },
+              { name: "Savings", value: savings, max: maxValues.savings },
+            ]);
+          }
+        } else {
+          console.warn("Dashboard endpoint returned success:false", res?.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dashboard overview:", err?.response || err.message || err);
+      }finally{
+        setLoading(false);
+      }
+    
+     };
+
+     useEffect(() => {
+      fetchDashboardOverview();
+     }, []);
+  return 
     <div></div>
-  )
-}
+};
 
 export default Dashboard;
