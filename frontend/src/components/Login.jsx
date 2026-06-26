@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, User } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { loginStyles } from "../assets/dummyStyles";
 
 const Login = ({ onLogin, API_URL = "http://localhost:4000" }) => {
@@ -148,7 +148,7 @@ const Login = ({ onLogin, API_URL = "http://localhost:4000" }) => {
               </label>
               <div className={loginStyles.inputContainer}>
                 <div className={loginStyles.inputIcon}>
-                  <Mail className="w-5 h-5" />
+                  <Lock className="w-5 h-5" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -178,7 +178,7 @@ const Login = ({ onLogin, API_URL = "http://localhost:4000" }) => {
                 id="remember"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className={loginStyles.input}
+                className={loginStyles.checkbox}
               />
               <label htmlFor="remember" className={loginStyles.checkboxLabel}>
                 Remember Me

@@ -3,7 +3,7 @@ import axios from "axios";
 import {styles} from "../assets/dummyStyles";
 import Navbar from "./Navbar";
  
-import Sidebar from "./Siderbar";
+import Sidebar from "./Sidebar";
 import { ArrowUp, ArrowDown, Activity, Car, CreditCard, DollarSign, Gift, Home, PiggyBank, ShoppingCart, TrendingUp, Utensils, Zap, RefreshCw, Clock, ChevronDown, ChevronUp, PieChart } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
@@ -376,7 +376,7 @@ const Layout = ({ onLogout, user }) => {
                 <div>
                   <p className={styles.statCards.cardTitle}>Saving Rate</p>
                   <p className={styles.statCards.cardValue}>$
-                    {stats.sacvingsRate}%
+                    {stats.savingsRate}%
                      </p>
                 </div>
                 <div className={styles.statCards.iconContainer("blue")}>
@@ -420,7 +420,7 @@ const Layout = ({ onLogout, user }) => {
                 </div>
                   
                   <div className={styles.transactions.dataStackingInfo}>
-                    <info className={styles.transactions.dataStackingIcon}/>
+                    <div className={styles.transactions.dataStackingIcon}/>
                     <span>
                       Transactions are stacked by dtae (newest first)
                     </span>
@@ -432,7 +432,7 @@ const Layout = ({ onLogout, user }) => {
                         <div key={id} 
                         className={styles.transactions.transactionItem}
                         >
-                          <div className="flex items-centre gap-1 md:gap-4 lg:gap-3">
+                          <div className="flex items-center gap-1 md:gap-4 lg:gap-3">
                           <div 
                           className={`p-2 rounded-lg ${styles.colors.transaction.bg(type)}`}>
                           {CATEGORY_ICONS[category] || (<DollarSign className={styles.transactions.icon}/>
@@ -498,8 +498,8 @@ const Layout = ({ onLogout, user }) => {
                 </h3>
                <div className={styles.categories.list}>
                 {topCategories.map(([category, amount]) => (
-                  <div key={ctaegory} className={styles.categories.categoryitem}>
-                    <div className= "flex items-centre gap-3">
+                  <div key={category} className={styles.categories.categoryitem}>
+                    <div className= "flex items-center gap-3">
                       <div className={styles.categories.categoryIconContainer}>
                         {CATEGORY_ICONS[category] || (
                           <DollarSign className={styles.categories.categoryIcon}/>

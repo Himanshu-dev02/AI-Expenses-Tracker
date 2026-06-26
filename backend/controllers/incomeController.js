@@ -139,11 +139,11 @@ export async function getIncomeOverview(req, res) {
         }).sort({date: -1});
         
 
-const totalIncome = incomes.reduce((acc, cur) => acc + cur.amount, 0);
-const averageIncome = incomes.length > 0 ? totalIncome / incomes.length : 0;
-const numberOfTransactions = incomes.length;
+const totalIncome = income.reduce((acc, cur) => acc + cur.amount, 0);
+const averageIncome = income.length > 0 ? totalIncome / income.length : 0;
+const numberOfTransactions = income.length;
 
-const recentTransactions = incomes.slice(0, 9);
+const recentTransactions = income.slice(0, 9);
 
 res.json({
     success: true,

@@ -1,8 +1,8 @@
 import User from "../models/userModel.js";
-import validattor from "validator";
+import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import e from "express";
+import express from "express";
 
 const JWT_SECRET = 'your_jwt_secret_key';
 const TOKEN_EXPIRY = '24h'; // Token expires in 24 hours
@@ -21,7 +21,7 @@ export async function registerUser(req, res) {
         });
     }
 
-    if (!validattor.isEmail(email)) {
+    if (!validator.isEmail(email)) {
         return res.status(400).json({
             success: false,
             message: "Please enter a valid email"
@@ -175,7 +175,7 @@ export async function updateProfile(req, res) {
 //to change password
 export async function updatePassword(req, res) {
     const { currentPassword, newPassword } = req.body;
-    if (!currentPassword || !newPassword || newPassword.length < 8) {
+    if (!currentPassword || !newPassword || newPassword.length < 6) {
         return res.status(400).json({
             success: false,
             message: "Password is invalid or too short"

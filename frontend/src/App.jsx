@@ -10,22 +10,22 @@ import axios from "axios";
  const API_URL = "http://localhost:4000";
 
  // to get transaction from localstorage
- const getTransacttionsFromStorage =() => {
+ const getTransactionsFromStorage =() => {
     const saved = localStorage.getItem("transactions");
     return saved ? JSON.parse(saved) : [];
  };
 
   // to protect the routes 
-  const ProtectedRoute = ({user, Children}) => {
+  const ProtectedRoute = ({ user, children }) => {
     const localToken = localStorage.getItem("token");
     const sessionToken = sessionStorage.getItem("token");
-    const hasToken =localToken || sessionToken;
-
-    if (!user ||  !hasToken){
+    const hasToken = localToken || sessionToken;
+  
+    if (!user || !hasToken) {
       return <Navigate to="/login" replace />;
     }
-    return Children;
-
+  
+    return children;
   };
 
   // to scroll to top when page gets reload or new page is visited
@@ -84,12 +84,12 @@ import axios from "axios";
 
    // to update user data both in state and storage 
    const updateUserData = ( updateUser) => {
-     setUser(updateuser);
+     setUser(updateUser);
 
      const localToken = localStorage.getItem("token");
      const sessionToken = sessionStorage.getItem("token");
      
-     if (localStorage){
+     if (localToken){
       localStorage.setItem("user" , JSON.stringify(updateUser));
      } else if (sessionToken) {
       sessionStorage.setItem("user", JSON.stringify(updateUser));
@@ -111,7 +111,7 @@ import axios from "axios";
         const tokenFromLocal = !!localToken;
         if(storedUser){
           setUser(storedUser);
-          setToken(storedUser);
+          setToken(storedtoken);
           setIsLoading(false);
           return ;
         }
@@ -123,7 +123,7 @@ import axios from "axios";
             });
 
             const profile = res.data;
-            persistAuth(profile, storedToken, tokenFromLocal);
+            persistAuth(profile, storedtoken, tokenFromLocal);
           }
            catch (fetchErr) {
             console.warn("Could not fetch profile with the stored token:",
@@ -134,12 +134,12 @@ import axios from "axios";
         }
         
       } catch (error) {
-       console.error( "error bootstrapping auth:", err);
+       console.error( "error bootstrapping auth:", error);
       } finally {
         setIsLoading (false);
 
         try {
-          setTransactions(getTransacttionsFromStorage());
+          setTransactions(getTransactionsFromStorage());
           
         } catch (txtErr) {
           console.error("Error loading transactions:",txtErr);
@@ -152,7 +152,7 @@ import axios from "axios";
 
    useEffect(() => {
     try {
-      localStorage.setItem("transaction", JSON.stringify(transaction));
+      localStorage.setItem("transactions", JSON.stringify(transaction));
       
     } catch (err) {
       console.error("error saving transactions:",err);
@@ -207,15 +207,21 @@ import axios from "axios";
  
        <Route path="/login" element={<Login onLogin={handleLogin}/> }/>
       <Route path="/Signup" element={<Signup onSignup={handleSignup}/>}/>
-        <Route element={<ProtectedRoute>
+        <Route element={<ProtectedRoute user={user} >
           <Layout user={user} onLogout={handleLogout}/>
           </ProtectedRoute>}>
-        <Route path="/" element={<Dashboard/>}
-         transactions={transaction}
+        <Route
+         path="/" 
+         element={
+         <Dashboard 
+          transactions={transaction}
         addTransaction={ addTransaction}
          editTransaction={editTransaction}
          deleteTransaction={deleteTransaction}
          refreshTransactions={refreshTransactions}
+         />
+        }
+         
          />
         </Route>
       </Routes>

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { dashboardStyles, trendStyles, chartStyles } from "../assets/dummyStyles"
 import {GAUGE_COLORS,
-   INCOME_CATEGORY_ICONS,
+    INCOME_CATEGORY_ICONS,
     EXPENSE_CATEGORY_ICONS } from "../assets/color";
 import { useOutletContext } from 'react-router-dom';
 import { getTimeFrameRange, getPreviousTimeFrameRange, calculateData, } from "../components/Helpers";
@@ -312,7 +312,7 @@ const Dashboard = () => {
         date: toIsoWithClientTime(newTransaction.date),
         description: newTransaction.description,
         amount: parseFloat (newTransaction.amount),
-        category: newTransaction.categories,
+        category: newTransaction.category,
       };
       try {
       setLoading(true);
@@ -334,7 +334,7 @@ const Dashboard = () => {
         amount: "",
         type: "expense",
         category: "Food"
-      });setShowAllModal(false);
+      });setShowModal(false);
       } catch (err) {
         console.error(
           "Failed to add Transactiona:",
@@ -369,7 +369,7 @@ const Dashboard = () => {
           onClick={() => setTimeFrame(frame)}
           className={dashboardStyles.timeFrameButton(timeFrame === frame)}
           >
-            {frame.chartAt(0).topperCase() + frame.slice(1)}
+            {frame.charAt(0).toUpperCase() + frame.slice(1)}
 
           </button>
         ))}
