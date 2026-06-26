@@ -5,6 +5,7 @@
  import Login from "./components/Login";
  import Signup from "./components/signup";
 import axios from "axios";
+import Income from "./pages/Income";
  
 
  const API_URL = "http://localhost:4000";
@@ -213,16 +214,22 @@ import axios from "axios";
         <Route
          path="/" 
          element={
-         <Dashboard 
+         <Dashboard/> }
           transactions={transaction}
         addTransaction={ addTransaction}
          editTransaction={editTransaction}
          deleteTransaction={deleteTransaction}
-         refreshTransactions={refreshTransactions}
+         refreshTransactions={refreshTransactions} 
          />
-        }
+       
          
-         />
+         <Route path="/income" element={
+          <Income  transactions={transaction}
+          addTransaction={ addTransaction}
+           editTransaction={editTransaction}
+           deleteTransaction={deleteTransaction}
+           refreshTransactions={refreshTransactions}  />
+         } />
         </Route>
       </Routes>
       </>
