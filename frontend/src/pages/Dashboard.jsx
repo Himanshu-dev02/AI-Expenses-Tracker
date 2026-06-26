@@ -6,7 +6,8 @@ import {GAUGE_COLORS,
 import { useOutletContext } from 'react-router-dom';
 import { getTimeFrameRange, getPreviousTimeFrameRange, calculateData, } from "../components/Helpers";
 import axios from "axios";
-import { Plus } from "lucide-react";
+import {  ArrowDown, BarChart, PiggyBank, Plus, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import FinancialCard from "../components/FinancialCard"
 
     const API_BASE = "http://localhost:4000/api";
 
@@ -377,6 +378,82 @@ const Dashboard = () => {
       </div>
 
      </div>
+    </div>
+
+    <div className={dashboardStyles.summaryGrid}>
+      <FinancialCard icon={
+        <div className={dashboardStyles.walletIconContainer}>
+          <Wallet className=" w-5 h-5 text-teal-600"/>
+        </div>
+      } label="Total Balance" 
+      value={`${Math.round(displayIncome - displayExpenses).toLocaleString()}`}
+      additionalContent={
+        <div className=" flex items-center gap-2 mt-2 text-sm">
+          <span className={dashboardStyles.balanceBadge}>
+            +${Math.round(displayIncome).toLocaleString()}
+          </span>
+         <span className={dashboardStyles.expenseBadge}> 
+          -${Math.round(displayExpenses).toLocaleString()}
+         </span>
+        </div>
+      }
+        />
+        <FinancialCard icon={
+        <div className={dashboardStyles.arrowDownIconContainer}>
+          <ArrowDown className=" w-5 h-5 text-orange-600"/>
+        </div>
+      } label={`${timeFrameRange.label} Expenses`}  value={`$${Math.round(displayIncome - displayExpenses).toLocaleString()}`}
+      additionalContent={
+         <div 
+         className={`mt-2 text-xs flex items-center gap-1 ${
+          expenseChange >= 0? trendStyles.positive : trendStyles.negative
+         }`}>
+          {expenseChange >= 0 ? (
+            <TrendingUp className=" w-4 h-4"/>
+          ) : (
+            <TrendingDown className=" w-4 h-4"/>
+          )}
+          <span>
+            {Math.abs(expenseChange)}%{" "}
+            {expenseChange >= 0 ? "increase" : "decrease"} from{" "}
+            {prevTimeFrameRange.label}
+          </span>
+          </div>
+        }
+       />
+        <FinancialCard icon={
+        <div className={dashboardStyles.walletIconContainer}>
+          <PiggyBank className=" w-5 h-5 text-cyan-600"/>
+        </div>
+      } label= {`${timeFrameRange.label} Savings`} 
+      value={`${Math.round(displayIncome - displayExpenses).toLocaleString()}`}
+      additionalContent={
+        <div className=" mt-2 text-xs text-cyan-600 flex items-center gap-2">
+          <div className=" flex items-center gap-1">
+            <BarChart className=" w-4 h-4" />
+            <span>
+              {displayIncome > 0
+              ? Math.round((displaySavings / displayIncome)* 100): 0
+            }
+            % of income
+            </span>
+          </div>
+          {typeof overviewMeta.savingsRate === "number" &&(
+            <span 
+            className={`px-2 py-1 rounded-full text-xs font-medium ${
+              overviewMeta.savingsRate < 0
+              ? trendStyles.negativeRate 
+              : trendStyles.positiveRate
+            }`}>
+              {overviewMeta.savingsRate}%
+
+            </span>
+          )}
+          </div>
+      }
+        />
+        
+    
     </div>
 
   </div>
