@@ -6,4 +6,4 @@ const TimeFrame = () => {
   )
 }
 
-export default TimeFrame
+export default TimeFrame;
