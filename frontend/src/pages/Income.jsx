@@ -33,6 +33,7 @@ import { incomeStyles as styles } from "../assets/dummyStyles";
 
 const API_BASE = "http://localhost:4000/api";
 
+//helps in converting date to ISO time 
 function toIsoWithClientTime(dateValue) {
   if (!dateValue) {
     return new Date().toISOString();
@@ -51,7 +52,8 @@ function toIsoWithClientTime(dateValue) {
     return new Date().toISOString();
   }
 }
-
+ 
+//small component 
 const IncomeChart = ({ chartData, timeFrame, timeFrameRange }) => (
   <div className={styles.chartContainer}>
     <div className={styles.chartHeaderContainer}>
@@ -137,8 +139,10 @@ const IncomeChart = ({ chartData, timeFrame, timeFrameRange }) => (
       </ResponsiveContainer>
     </div>
   </div>
-);
+); //for income chart
 
+
+//small component
 const FilterSection = ({ filter, setFilter, handleExport }) => (
   <div className={styles.filterContainer}>
     <div className="relative w-full sm:w-auto">
@@ -163,7 +167,7 @@ const FilterSection = ({ filter, setFilter, handleExport }) => (
       <Download size={16} className="md:size-4" /> Export
     </button>
   </div>
-);
+); // added for filtering the data
 
 const Income = () => {
   const {
@@ -199,6 +203,7 @@ const Income = () => {
     date: new Date().toISOString().split("T")[0],
   });
 
+  // to get the token from localstorage
   const getAuthHeaders = useCallback(() => {
     const token = localStorage.getItem("token");
     return token ? { Authorization: `Bearer ${token}` } : {};
@@ -213,6 +218,7 @@ const Income = () => {
     [timeFrame, timeFrameRange],
   );
 
+  //function to check if a date is within a range or not
   const isDateInRange = useCallback((date, start, end) => {
     const transactionDate = new Date(date);
     const startDate = new Date(start);
@@ -231,7 +237,7 @@ const Income = () => {
         .filter((t) => t.type === "income")
         .sort((a, b) => new Date(b.date) - new Date(a.date)),
     [outletTransactions],
-  );
+  ); //filter transaction coming from outletcontext
 
   const timeFrameTransactions = useMemo(
     () =>
@@ -239,7 +245,7 @@ const Income = () => {
         isDateInRange(t.date, timeFrameRange.start, timeFrameRange.end),
       ),
     [incomeTransactions, timeFrameRange, isDateInRange],
-  );
+  ); // filter by time frame 
 
   const filteredTransactions = useMemo(() => {
     if (filter === "all") return timeFrameTransactions;
@@ -260,7 +266,8 @@ const Income = () => {
       return t.category.toLowerCase() === filter.toLowerCase();
     });
   }, [timeFrameTransactions, filter, timeFrameRange]);
-
+ 
+   //additional filters
   const chartData = useMemo(() => {
     const data = chartPoints.map((point) => ({ ...point, income: 0 }));
 
@@ -279,7 +286,8 @@ const Income = () => {
 
     return data;
   }, [filteredTransactions, chartPoints, timeFrame]);
-
+ 
+  //fetch the overview feom the server side
   const fetchOverview = useCallback(
     async (range = timeFrame ?? "monthly") => {
       try {
@@ -332,13 +340,14 @@ const Income = () => {
             )
           : 0,
     [overview.averageIncome, filteredTransactions],
-  );
+  ); //use backend overview if available
 
   const transactionsCount = useMemo(
     () => overview.numberOfTransactions ?? filteredTransactions.length,
     [overview.numberOfTransactions, filteredTransactions],
   );
-
+ 
+  //to add an income
   const handleAddTransaction = useCallback(async () => {
     if (!newTransaction.description || !newTransaction.amount) return;
 
@@ -380,7 +389,8 @@ const Income = () => {
     fetchOverview,
     timeFrame,
   ]);
-
+ 
+  //to update an income
   const handleEditTransaction = useCallback(async () => {
     if (!editingId || !editForm.description || !editForm.amount) return;
 
@@ -417,7 +427,8 @@ const Income = () => {
     fetchOverview,
     timeFrame,
   ]);
-
+   
+  //to delete an income transaction
   const handleDeleteTransaction = useCallback(
     async (id) => {
       if (!id) return;
@@ -443,6 +454,7 @@ const Income = () => {
     [getAuthHeaders, refreshTransactions, fetchOverview, timeFrame],
   );
 
+    //to download the excel sheet
   const handleExport = useCallback(async () => {
     try {
       const res = await axios.get(`${API_BASE}/income/downloadexcel`, {
@@ -486,6 +498,7 @@ const Income = () => {
     }
   }, [getAuthHeaders, filteredTransactions]);
 
+  // the UI part 
   return (
     <div className={styles.wrapper}>
       <div className={styles.headerContainer}>
