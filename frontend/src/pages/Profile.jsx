@@ -1,10 +1,10 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { profileStyles } from '../assets/dummyStyles';
 import Modal from 'react-modal';
-import { Eye, EyeOff, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Lock, User, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast, ToastContainer} from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 const API_BASE = "http://localhost:4000/api";
@@ -22,9 +22,8 @@ const PasswordInput = memo(({ name, label, value, error, showField, onToggle, on
         name={name}
         value={value}
         onChange={onChange}
-        className={`${profileStyles.inputWithError} ${
-          error ? 'border-red-300' : 'border-gray-200'
-        }`}
+        className={`${profileStyles.inputWithError} ${error ? 'border-red-300' : 'border-gray-200'
+          }`}
         placeholder={`Enter ${label.toLowerCase()}`}
         disabled={disabled}
         // Add key prop to help React identify the input
@@ -46,11 +45,11 @@ const PasswordInput = memo(({ name, label, value, error, showField, onToggle, on
 ));
 
 PasswordInput.displayName = 'PasswordInput';
- 
-const Profile = ({user, onUpdateProfile, onLogout}) => {
-    const navigate = useNavigate();
-  const [user, setUser] = useState({ 
-    name: '', 
+
+const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(initialUser || {
+    name: '',
     email: '',
     joinDate: ''
   });
@@ -70,102 +69,102 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
   const [passwordErrors, setPasswordErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const getAuthToken = useCallback(() => localStorage.getItem("token"), []);
+  const getAuthToken = useCallback(() => localStorage.getItem("token") || sessionStorage.getItem("token"), []);
 
 
   //  API request 
   const handleApiRequest = useCallback(
     async (method, endpoint, data = null) => {
-        const token = getAuthToken();
-        if(!token){
-            navigate("/login");
-            return null;
-        } 
-        try {
-            setLoading(true);
-            const config = {
-                method,
-                url: `${API_BASE}${endpoint}`,
-                headers: { Authorization: `Bearer ${token}`},
-            };
-            if(data) config.data = data;
-            const response = await axios(config);
-            return response.data;
-            
-        } catch (error) {
-            console.error(`${method} request error:`, error);
-            if(error.response?.status === 401){
-                navigate("/login");
-            }
-            throw error;
-        } finally {
-            setLoading(false);
+      const token = getAuthToken();
+      if (!token) {
+        navigate("/login");
+        return null;
+      }
+      try {
+        setLoading(true);
+        const config = {
+          method,
+          url: `${API_BASE}${endpoint}`,
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        if (data) config.data = data;
+        const response = await axios(config);
+        return response.data;
+
+      } catch (error) {
+        console.error(`${method} request error:`, error);
+        if (error.response?.status === 401) {
+          navigate("/login");
         }
+        throw error;
+      } finally {
+        setLoading(false);
+      }
     },
     [getAuthToken, navigate],
-  ); 
+  );
 
-// to fetch current user
- useEffect(() => {
+  // to fetch current user
+  useEffect(() => {
     const fetchUserData = async () => {
-        try {
-          const data = await handleApiRequest("get", "/user/me");
-          if(data){
-            const data = data.user || data;
-            setUser(userData);
-            setTempUser(userData);
-          }    
-        } catch (err) {
-            toast.error("Failed to load user data");
+      try {
+        const data = await handleApiRequest("get", "/user/me");
+        if (data) {
+          const userData = data.user || data;
+          setUser(userData);
+          setTempUser(userData);
         }
+      } catch (err) {
+        toast.error("Failed to load user data");
+      }
     };
     fetchUserData();
- }, [handleApiRequest]);
+  }, [handleApiRequest]);
 
-    // Input change handlers
-    const handleInputChange = useCallback((e) => {
-        const { name, value } = e.target;
-        setTempUser(prev => ({ ...prev, [name]: value }));
-      }, []);
-    
-      const handlePasswordChange = useCallback((e) => {
-        const { name, value } = e.target;
-        setPasswordData(prev => ({ ...prev, [name]: value }));
-        // Clear error for this field when user starts typing
-        setPasswordErrors(prev => ({ ...prev, [name]: '' }));
-      }, []);
-    
-      // Password visibility toggle
-      const togglePasswordVisibility = useCallback((field) => {
-        setShowPassword(prev => ({ ...prev, [field]: !prev[field] }));
-      }, []);
+  // Input change handlers
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setTempUser(prev => ({ ...prev, [name]: value }));
+  }, []);
 
-       // save profile 
-       const handleSaveProfile = async () => {
-        try {
-            const data = await handleApiRequest("put","/user/profile", tempUser);
-            if(data) {
-                const updateUser = data.user || data;
-                setUser(updateUser);
-                setTempUser(updateUser);
-                setEditMode(false);
+  const handlePasswordChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setPasswordData(prev => ({ ...prev, [name]: value }));
+    // Clear error for this field when user starts typing
+    setPasswordErrors(prev => ({ ...prev, [name]: '' }));
+  }, []);
 
-                onUpdateProfile?.(updateUser);
-                toast.success("profile updated successfully!")
+  // Password visibility toggle
+  const togglePasswordVisibility = useCallback((field) => {
+    setShowPassword(prev => ({ ...prev, [field]: !prev[field] }));
+  }, []);
 
-            }
-            
-        } catch (err) {
-            toast.error(err.response?.data?.message || "Failed to Update profile">)
-        }
-       };
-    
-       const handleCancelEdit = useCallback(() => {
-        setTempUser(user);
+  // save profile 
+  const handleSaveProfile = async () => {
+    try {
+      const data = await handleApiRequest("put", "/user/profile", tempUser);
+      if (data) {
+        const updateUser = data.user || data;
+        setUser(updateUser);
+        setTempUser(updateUser);
         setEditMode(false);
-       }, [user]);
 
-        // Password validation
+        onUpdateProfile?.(updateUser);
+        toast.success("profile updated successfully!")
+
+      }
+
+    } catch (err) {
+      toast.error(error.response?.data?.message || "Failed to Update profile");
+    }
+  };
+
+  const handleCancelEdit = useCallback(() => {
+    setTempUser(user);
+    setEditMode(false);
+  }, [user]);
+
+  // Password validation
   const validatePassword = useCallback(() => {
     const errors = {};
     if (!passwordData.current) errors.current = 'Current password is required';
@@ -181,45 +180,45 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
     return Object.keys(errors).length === 0;
   }, [passwordData]);
 
- //to change password 
- const handlePasswordSubmit = async (e) => {
+  //to change password 
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    if(!validatePassword()) return;
+    if (!validatePassword()) return;
     try {
-        await handleApiRequest("put","/user/password",{
-            currentPassword: passwordData.current,
-            newPassword: passwordData.new,
-        });
-        toast.success("password change succeessfully!");
-        setShowPasswordModal(false);
-        setPasswordData({ current: "", confirm:""});
-        setPasswordErrors({});
+      await handleApiRequest("put", "/user/password", {
+        currentPassword: passwordData.current,
+        newPassword: passwordData.new,
+      });
+      toast.success("password change succeessfully!");
+      setShowPasswordModal(false);
+      setPasswordData({ current: "", confirm: "" });
+      setPasswordErrors({});
 
-        // reset password visibility
-        setShowPassword ({ current: false, new: false, confirm: false});
+      // reset password visibility
+      setShowPassword({ current: false, new: false, confirm: false });
     } catch (error) {
-        toast.error(error.response?.data?.message || "Failed to change password">);
+      toast.error(error.response?.data?.message || "Failed to change password");
     }
- };
+  };
 
- const handleLogout = useCallback(() =>{
+  const handleLogout = useCallback(() => {
     onLogout?.();
     navigate("/signup");
- }, [onLogout, navigate]);
+  }, [onLogout, navigate]);
 
- const closePasswordModal = useCallback(() => {
-    if(!loading) {
-        setShowPasswordModal(false);
-        setPasswordData({ currrent:"", new: "", confirm: ""});
-        setPasswordErrors({});
+  const closePasswordModal = useCallback(() => {
+    if (!loading) {
+      setShowPasswordModal(false);
+      setPasswordData({ currrent: "", new: "", confirm: "" });
+      setPasswordErrors({});
 
-        //reset password visibility
-        setShowPassword({ current: false, new: false, confirm: false});
-        
+      //reset password visibility
+      setShowPassword({ current: false, new: false, confirm: false });
+
     }
- },[loading]);
+  }, [loading]);
 
-  return 
+  return (
     <div className={profileStyles.container}>
       <ToastContainer
         position="top-right"
@@ -234,111 +233,114 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
       />
       <div className={profileStyles.mainContainer}>
         <div className={profileStyles.header}>
-            <div className={profileStyles.avatar}>
-                <User className=" w-12 h-12 text-white" />
-            </div>
-           <h1 className={profileStyles.userName}>
+          <div className={profileStyles.avatar}>
+            <User className=" w-12 h-12 text-white" />
+          </div>
+          <h1 className={profileStyles.userName}>
             {user.name || "Loading..."}
-           </h1>
-           <p className={profileStyles.userEmail}>
-          {user.email || "Loading..."}
-         </p>
+          </h1>
+          <p className={profileStyles.userEmail}>
+            {user.email || "Loading..."}
+          </p>
         </div>
         <div className={profileStyles.content}>
-            <div className={profileStyles.grid}>
-                <div className={profileStyles.card}>
-                    <div className=" flex justify-between items-center mb-6">
-                        <h2 className={profileStyles.cardTitle}>
-                            <User className={profileStyles.icon}/>
-                            Personal Information
-                        </h2>
-                        {!editMode && (
-                            <button 
-                            onClick={() => setEditMode(true)}
-                            className={profileStyles.editButton}
-                            disabled={loading}>
-                                {loading ? "Loading..." : "Edit"}
-                            </button>
-                        )}
-
-                    </div>
-                 
-
-                 {editMode ? (
-                    <div className=" space-y-4">
-                         <div>
-                        <label className={profileStyles.label}>Full Name</label>
-                        <input type="text" name="name" value={tempUser.name}
-                        onChange={handleInputChange} className={profileStyles.input}
-                        disabled={loading}/>
-                        </div>
-                        <div>
-                        <label className={profileStyles.label}>Email Address</label>
-                        <input type="email" name="email" value={tempUser.email}
-                        onChange={handleInputChange} className={profileStyles.input}
-                        disabled={loading}/>
-                        </div>
-                        <div className="flex gap-3 pt-4">
-                            <button onClick={handleCancelEdit} className={profileStyles.buttonSecondary}
-                            disabled={loading}>
-                                Cancel
-
-                            </button>
-                        </div>
-                     </div>
-                    
-                   > 
-                 ) : (
-                    <div className="space-y-4">
-                        <div>
-                         <p className={profileStyles.label}>Full Name</p>
-                         <p className="font-medium text-gray-800">{user.name}</p>
-                        </div>
-
-                        <div>
-                     <p className={profileStyles.label}>Email Address</p>
-                     <p className="font-medium text-gray-800">{user.name}</p>
-                        </div>
-
-                    </div>
-
-                 )}
-                </div>
-              <div className={profileStyles.card}>
+          <div className={profileStyles.grid}>
+            <div className={profileStyles.card}>
+              <div className=" flex justify-between items-center mb-6">
                 <h2 className={profileStyles.cardTitle}>
-                    <Lock className={profileStyles.icon}/>
-                    Account Security
+                  <User className={profileStyles.icon} />
+                  Personal Information
                 </h2>
-               <div className="space-y-4">
-                <div className={profileStyles.securityItem}>
-                    <div>
-                        <p className={profileStyles.securityText}>Password</p>
-                    </div>
-                    <button onClick={() => setShowPassword(true)}
-                        className={profileStyles.changeButton} disabled={loading}>
-                     Change 
+                {!editMode && (
+                  <button
+                    onClick={() => setEditMode(true)}
+                    className={profileStyles.editButton}
+                    disabled={loading}>
+                    {loading ? "Loading..." : "Edit"}
+                  </button>
+                )}
+
+              </div>
+
+
+              {editMode ? (
+                <div className=" space-y-4">
+                  <div>
+                    <label className={profileStyles.label}>Full Name</label>
+                    <input type="text" name="name" value={tempUser.name}
+                      onChange={handleInputChange} className={profileStyles.input}
+                      disabled={loading} />
+                  </div>
+                  <div>
+                    <label className={profileStyles.label}>Email Address</label>
+                    <input type="email" name="email" value={tempUser.email}
+                      onChange={handleInputChange} className={profileStyles.input}
+                      disabled={loading} />
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button onClick={handleSaveProfile} className={profileStyles.buttonPrimary}
+                      disabled={loading}>
+                      {loading ? "saving..." : "Save Changes"}
                     </button>
+                    <button onClick={handleCancelEdit} className={profileStyles.buttonSecondary}
+                      disabled={loading}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+
+
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <p className={profileStyles.label}>Full Name</p>
+                    <p className="font-medium text-gray-800">{user.name}</p>
+                  </div>
+
+                  <div>
+                    <p className={profileStyles.label}>Email Address</p>
+                    <p className="font-medium text-gray-800">{user.name}</p>
+                  </div>
 
                 </div>
 
-               </div>
-
-               <button
-               onClick={handleLogout}
-               className={`${profileStyles.buttonPrimary}
-               mt-6 w-full hover:opacity-90 transation-opacity`} 
-               disabled={loading}>
-                {loading ? "Processing...": "Logout"}
-               </button>
-              </div>
+              )}
             </div>
+            <div className={profileStyles.card}>
+              <h2 className={profileStyles.cardTitle}>
+                <Lock className={profileStyles.icon} />
+                Account Security
+              </h2>
+              <div className="space-y-4">
+                <div className={profileStyles.securityItem}>
+                  <div>
+                    <p className={profileStyles.securityText}>Password</p>
+                  </div>
+                  <button onClick={() => setShowPassword(true)}
+                    className={profileStyles.changeButton} disabled={loading}>
+                    Change
+                  </button>
+
+                </div>
+
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className={`${profileStyles.buttonPrimary}
+               mt-6 w-full hover:opacity-90 transation-opacity`}
+                disabled={loading}>
+                {loading ? "Processing..." : "Logout"}
+              </button>
+            </div>
+          </div>
 
         </div>
 
       </div>
 
-     {/* Change Password Modal */}
-     <Modal
+      {/* Change Password Modal */}
+      <Modal
         isOpen={showPasswordModal}
         onRequestClose={closePasswordModal}
         contentLabel="Change Password"
@@ -351,7 +353,7 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
         <div className={profileStyles.modalContent}>
           <div className={profileStyles.modalHeader}>
             <h3 className={profileStyles.modalTitle}>Change Password</h3>
-            <button 
+            <button
               onClick={closePasswordModal}
               className="text-gray-500 hover:text-gray-800 disabled:opacity-50"
               disabled={loading}
@@ -359,7 +361,7 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
               <X className="w-6 h-6" />
             </button>
           </div>
-          
+
           <form onSubmit={handlePasswordSubmit} className="space-y-4 lg:-mx-20">
             <PasswordInput
               name="current"
@@ -371,7 +373,7 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
               onChange={handlePasswordChange}
               disabled={loading}
             />
-            
+
             <PasswordInput
               name="new"
               label="New Password"
@@ -382,7 +384,7 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
               onChange={handlePasswordChange}
               disabled={loading}
             />
-            
+
             <PasswordInput
               name="confirm"
               label="Confirm New Password"
@@ -393,6 +395,27 @@ const Profile = ({user, onUpdateProfile, onLogout}) => {
               onChange={handlePasswordChange}
               disabled={loading}
             />
+
+            <div className="flex gap-3 pt-4">
+              <button
+                type="submit"
+                className={profileStyles.buttonPrimary}
+                disabled={loading}
+              >
+                {loading ? 'Updating...' : 'Update Password'}
+              </button>
+              <button
+                type="button"
+                onClick={closePasswordModal}
+                className={profileStyles.buttonSecondary}
+                disabled={loading}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 };

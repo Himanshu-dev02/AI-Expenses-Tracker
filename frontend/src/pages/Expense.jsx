@@ -24,7 +24,7 @@ import axios from "axios";
 import { exportToExcel } from "../utils/exportUtils";
 import FinancialCard from "../components/FinancialCard";
 import TimeFrameSelector from "../components/TimeFrame";
-import TransactionItem from "../components/TransactionItem";
+import TransactionItem from "../components/Transactionitem";
 import AddTransactionModal from "../components/Add";
 import { getTimeFrameRange, generateChartPoints } from "../components/Helpers";
 import { CATEGORY_ICONS } from "../assets/color";
