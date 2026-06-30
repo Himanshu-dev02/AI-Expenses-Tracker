@@ -1,8 +1,7 @@
 // controllers/receiptController.js
-const fs = require("fs");
-const path = require("path");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const Expense = require("../models/expenseModel");
+import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import expenseModel from "../models/expenseModel.js";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -22,7 +21,7 @@ const imageToGenerativePart = (filePath, mimetype) => {
 // ---------------------------------------------------------------------------
 // POST /api/receipt/scan
 // ---------------------------------------------------------------------------
-const scanReceipt = async (req, res) => {
+export const scanReceipt = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No receipt image uploaded" });
   }
@@ -41,7 +40,7 @@ Required fields:
 {
   "amount": <number, total amount paid>,
   "date": "<ISO 8601 date string, e.g. 2024-01-15>",
-  "category": "<one of: Food, Transport, Shopping, Entertainment, Bills, Health, Education, Other>",
+  "category": "<one of: Food, Housing, Transport, Shopping, Entertainment, Utilities, Healthcare, Other>",
   "merchant": "<store or restaurant name>",
   "description": "<brief description of the purchase>",
   "confidence": "<high | medium | low based on image clarity>"
@@ -69,15 +68,17 @@ Do not include currency symbols in the amount field, only the numeric value.`;
 
     // -----------------------------------------------------------------------
     // Optional auto-save: pass ?save=true in the query string
+    // Matches your schema's field names: description, amount, category, date, userId, type
     // -----------------------------------------------------------------------
     let savedExpense = null;
     if (req.query.save === "true" && extractedData.amount && extractedData.date) {
-      const expense = new Expense({
+      const expense = new expenseModel({
         userId: req.user.id,
         amount: extractedData.amount,
         date: new Date(extractedData.date),
         category: extractedData.category || "Other",
         description: extractedData.description || extractedData.merchant || "Receipt scan",
+        type: "expense",
         receiptImage: req.file.filename,
       });
       savedExpense = await expense.save();
@@ -108,5 +109,3 @@ Do not include currency symbols in the amount field, only the numeric value.`;
     });
   }
 };
-
-module.exports = { scanReceipt };
