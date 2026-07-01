@@ -124,8 +124,7 @@ const AddTransactionModal = ({
            <div>
             <label className={modalStyles.label}>Date</label>
             <input type="date" value = {newTransaction.date} onChange={(e) =>
-                newTransaction
-            ((prev) => ({
+              setNewTransaction((prev) => ({
                 ...prev,
                 date: e.target.value
             }))

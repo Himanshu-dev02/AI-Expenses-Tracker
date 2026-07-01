@@ -67,7 +67,9 @@ const Layout = ({ onLogout, user }) => {
   const fetchTransactions = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token =
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
       const [incomeRes, expenseRes] = await Promise.all([
@@ -112,7 +114,9 @@ const Layout = ({ onLogout, user }) => {
 
   const addTransaction = async (transaction) => {
     try {
-      const token = localStorage.getItem("token");
+     const token =
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint =
         transaction.type === "income" ? "income/add" : "expense/add";
@@ -132,7 +136,9 @@ const Layout = ({ onLogout, user }) => {
 
   const editTransaction = async (id, transaction) => {
     try {
-      const token = localStorage.getItem("token");
+     const token =
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint =
         transaction.type === "income" ? "income/update" : "expense/update";
@@ -154,7 +160,9 @@ const Layout = ({ onLogout, user }) => {
 
   const deleteTransaction = async (id, type) => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint = type === "income" ? "income/delete" : "expense/delete";
       await axios.delete(`${API_BASE_URL}/${endpoint}/${id}`, { headers });

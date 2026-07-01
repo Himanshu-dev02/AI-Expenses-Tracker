@@ -52,7 +52,7 @@ function toIsoWithClientTime(dateValue) {
     return new Date().toISOString();
   }
 }
- 
+
 //small component 
 const IncomeChart = ({ chartData, timeFrame, timeFrameRange }) => (
   <div className={styles.chartContainer}>
@@ -173,7 +173,7 @@ const Income = () => {
   const {
     transactions: outletTransactions = [],
     timeFrame = "monthly",
-    setTimeFrame = () => {},
+    setTimeFrame = () => { },
     refreshTransactions,
   } = useOutletContext();
 
@@ -205,7 +205,7 @@ const Income = () => {
 
   // to get the token from localstorage
   const getAuthHeaders = useCallback(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     return token ? { Authorization: `Bearer ${token}` } : {};
   }, []);
 
@@ -266,8 +266,8 @@ const Income = () => {
       return t.category.toLowerCase() === filter.toLowerCase();
     });
   }, [timeFrameTransactions, filter, timeFrameRange]);
- 
-   //additional filters
+
+  //additional filters
   const chartData = useMemo(() => {
     const data = chartPoints.map((point) => ({ ...point, income: 0 }));
 
@@ -279,14 +279,14 @@ const Income = () => {
           : timeFrame === "yearly"
             ? d.date.getMonth() === transDate.getMonth()
             : d.date.getDate() === transDate.getDate() &&
-              d.date.getMonth() === transDate.getMonth(),
+            d.date.getMonth() === transDate.getMonth(),
       );
       point && (point.income += Math.round(Number(transaction.amount)));
     });
 
     return data;
   }, [filteredTransactions, chartPoints, timeFrame]);
- 
+
   //fetch the overview feom the server side
   const fetchOverview = useCallback(
     async (range = timeFrame ?? "monthly") => {
@@ -333,11 +333,11 @@ const Income = () => {
         ? Math.round(overview.averageIncome)
         : filteredTransactions.length
           ? Math.round(
-              filteredTransactions.reduce(
-                (s, t) => s + Math.round(Number(t.amount || 0)),
-                0,
-              ) / filteredTransactions.length,
-            )
+            filteredTransactions.reduce(
+              (s, t) => s + Math.round(Number(t.amount || 0)),
+              0,
+            ) / filteredTransactions.length,
+          )
           : 0,
     [overview.averageIncome, filteredTransactions],
   ); //use backend overview if available
@@ -346,7 +346,7 @@ const Income = () => {
     () => overview.numberOfTransactions ?? filteredTransactions.length,
     [overview.numberOfTransactions, filteredTransactions],
   );
- 
+
   //to add an income
   const handleAddTransaction = useCallback(async () => {
     if (!newTransaction.description || !newTransaction.amount) return;
@@ -389,7 +389,7 @@ const Income = () => {
     fetchOverview,
     timeFrame,
   ]);
- 
+
   //to update an income
   const handleEditTransaction = useCallback(async () => {
     if (!editingId || !editForm.description || !editForm.amount) return;
@@ -427,7 +427,7 @@ const Income = () => {
     fetchOverview,
     timeFrame,
   ]);
-   
+
   //to delete an income transaction
   const handleDeleteTransaction = useCallback(
     async (id) => {
@@ -454,7 +454,7 @@ const Income = () => {
     [getAuthHeaders, refreshTransactions, fetchOverview, timeFrame],
   );
 
-    //to download the excel sheet
+  //to download the excel sheet
   const handleExport = useCallback(async () => {
     try {
       const res = await axios.get(`${API_BASE}/income/downloadexcel`, {

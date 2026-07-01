@@ -7,6 +7,7 @@ import userRouter from './routes/userRoute.js';
 import incomeRouter from './routes/incomeRoute.js';
 import expenseRouter from './routes/expenseRoute.js';
 import dashboardRouter from './routes/dashboardRoutes.js';
+import receiptRouter from './routes/receiptRoute.js';
 
 const app = express();
 const PORT = 4000;
@@ -14,7 +15,7 @@ const PORT = 4000;
 
 //Middleware
 app.use(cors());
-app.use(express.json());    
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -25,9 +26,11 @@ connectDB();
 
 //Routes
 app.use("/api/user", userRouter);
-app.use("/api/income",incomeRouter);
-app.use("/api/expense",expenseRouter);
+app.use("/api/income", incomeRouter);
+app.use("/api/expense", expenseRouter);
 app.use("/api/dashboard", dashboardRouter);
+app.use("/api/receipt", receiptRouter);
+app.use("/uploads", express.static("uploads"));
 
 app.get('/', (req, res) => {
     res.send("API WORKING!");

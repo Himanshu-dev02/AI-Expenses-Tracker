@@ -3,7 +3,7 @@ import { Camera, Upload, X, Loader2, Check, RotateCcw } from "lucide-react";
 import { modalStyles } from "../assets/dummyStyles";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "http://localhost:4000/api";
 
 const ReceiptScanner = ({ showScanner, setShowScanner, onConfirm, color = "teal" }) => {
   const [imageFile, setImageFile] = useState(null);
@@ -64,11 +64,11 @@ const ReceiptScanner = ({ showScanner, setShowScanner, onConfirm, color = "teal"
     setError("");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const formData = new FormData();
       formData.append("receipt", imageFile);
 
-      const { data } = await axios.post(`${BASE_URL}/api/receipt/scan`, formData, {
+      const { data } = await axios.post(`${API_BASE_URL}/receipt/scan`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

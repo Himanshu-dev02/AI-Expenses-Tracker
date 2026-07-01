@@ -142,7 +142,7 @@ export async function updateProfile(req, res) {
     const { name, email } = req.body;
     
 
-    if (!name || !email || !validattor.isEmail(email)) {
+    if (!name || !email || !validator.isEmail(email)) {
         return res.status(400).json({
             success: false,
             message: "Please fill all the fields"

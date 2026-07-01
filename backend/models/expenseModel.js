@@ -2,21 +2,21 @@ import mongoose from 'mongoose';
 
 
 const expenseSchema = new mongoose.Schema({
-    description : {
-    type : String,
-    required : true
+  description: {
+    type: String,
+    required: true
   },
-  amount : {
-    type : Number,
-    required : true
+  amount: {
+    type: Number,
+    required: true
   },
   category: {
     type: String,
-    required : true,
+    required: true,
   },
   date: {
     type: Date,
-    required : true
+    required: true
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,14 +25,18 @@ const expenseSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    default: "expense",  
+    default: "expense",
+  },
+  receiptImage: {
+    type: String,
+    default: null,
   },
 },
-{
+  {
     timestamps: true
-  
-  
-});
+
+
+  });
 
 const expenseModel = mongoose.model.expense || mongoose.model("expense", expenseSchema);
 export default expenseModel;

@@ -9,6 +9,7 @@ import {
   TrendingDown,
   Filter,
   BarChart2,
+  Camera,
 } from "lucide-react";
 import {
   AreaChart,
@@ -29,6 +30,7 @@ import AddTransactionModal from "../components/Add";
 import { getTimeFrameRange, generateChartPoints } from "../components/Helpers";
 import { CATEGORY_ICONS } from "../assets/color";
 import { expensePageStyles as styles } from "../assets/dummyStyles";
+import ReceiptScanner from "../components/ReceiptScanner";
 
 const API_BASE = "http://localhost:4000/api";
 
@@ -61,14 +63,15 @@ function toIsoWithClientTime(dateValue) {
 
 const ExpensePage = () => {
   // Get data from outlet context including refreshTransactions
-  const { 
-    transactions: outletTransactions = [], 
-    timeFrame = "monthly", 
-    setTimeFrame = () => {},
-    refreshTransactions 
+  const {
+    transactions: outletTransactions = [],
+    timeFrame = "monthly",
+    setTimeFrame = () => { },
+    refreshTransactions
   } = useOutletContext();
 
   const [showModal, setShowModal] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const [filter, setFilter] = useState("all");
@@ -87,7 +90,7 @@ const ExpensePage = () => {
     type: "expense",
     category: "Food",
   });
-  const [ setOverview] = useState({
+  const [overview, setOverview] = useState({
     totalExpense: 0,
     averageExpense: 0,
     numberOfTransactions: 0,
@@ -97,7 +100,7 @@ const ExpensePage = () => {
 
   // Auth headers helper
   const getAuthHeaders = useCallback(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     return token ? { Authorization: `Bearer ${token}` } : {};
   }, []);
 
@@ -147,11 +150,11 @@ const ExpensePage = () => {
     const transactionDate = new Date(date);
     const startDate = new Date(start);
     const endDate = new Date(end);
-    
+
     transactionDate.setHours(0, 0, 0, 0);
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
-    
+
     return transactionDate >= startDate && transactionDate <= endDate;
   }, []);
 
@@ -165,7 +168,7 @@ const ExpensePage = () => {
 
   // Filter transactions by time frame
   const timeFrameTransactions = useMemo(
-    () => expenseTransactions.filter(t => 
+    () => expenseTransactions.filter(t =>
       isDateInRange(t.date, timeFrameRange.start, timeFrameRange.end)
     ),
     [expenseTransactions, timeFrameRange, isDateInRange]
@@ -183,7 +186,7 @@ const ExpensePage = () => {
 
     return timeFrameTransactions.filter(t => {
       const transDate = new Date(t.date);
-      
+
       if (filter === "month") {
         const compareYear = yearFromSelectedMonth ?? yearFromTimeFrame ?? now.getFullYear();
         const compareMonth = monthFromSelectedMonth ?? monthFromTimeFrame ?? now.getMonth();
@@ -204,7 +207,7 @@ const ExpensePage = () => {
     () => filteredTransactions.reduce((sum, t) => sum + Math.round(Number(t.amount || 0)), 0),
     [filteredTransactions]
   );
-  
+
   const averageExpense = useMemo(
     () => filteredTransactions.length ? Math.round(totalExpense / filteredTransactions.length) : 0,
     [filteredTransactions, totalExpense]
@@ -220,8 +223,8 @@ const ExpensePage = () => {
         timeFrame === "daily"
           ? d.hour === transDate.getHours()
           : timeFrame === "yearly"
-          ? d.date.getMonth() === transDate.getMonth()
-          : d.date.getDate() === transDate.getDate() && d.date.getMonth() === transDate.getMonth()
+            ? d.date.getMonth() === transDate.getMonth()
+            : d.date.getDate() === transDate.getDate() && d.date.getMonth() === transDate.getMonth()
       );
       point && (point.expense += Math.round(Number(transaction.amount)));
     });
@@ -238,13 +241,13 @@ const ExpensePage = () => {
         url: `${API_BASE}${url}`,
         headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       };
-      
+
       if (data) config.data = data;
-      
+
       const response = await axios(config);
       await refreshTransactions();
       await fetchOverview(timeFrame);
-      
+
       return response;
     } catch (err) {
       console.error(`${method} request error:`, err);
@@ -331,12 +334,12 @@ const ExpensePage = () => {
       });
       const disposition = res.headers["content-disposition"];
       let filename = "expense_details.xlsx";
-      
+
       if (disposition) {
         const match = disposition.match(/filename="?(.+)"?/);
         if (match && match[1]) filename = match[1];
       }
-      
+
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = filename;
@@ -377,6 +380,13 @@ const ExpensePage = () => {
             disabled={loading}
           >
             <Plus size={20} /> {loading ? "Processing..." : "Add Expense"}
+          </button>
+          <button
+            onClick={() => setShowScanner(true)}
+            className={styles.addButton}
+            disabled={loading}
+          >
+            <Camera size={20} /> Scan Receipt
           </button>
         </div>
 
@@ -615,6 +625,22 @@ const ExpensePage = () => {
           "Healthcare",
           "Other",
         ]}
+        color="orange"
+      />
+
+      <ReceiptScanner
+        showScanner={showScanner}
+        setShowScanner={setShowScanner}
+        onConfirm={(data) => {
+          setNewTransaction({
+            description: data.description || "",
+            amount: data.amount || "",
+            category: data.category || "Food",
+            date: data.date || new Date().toISOString().split("T")[0],
+            type: "expense",
+          });
+          setShowModal(true);
+        }}
         color="orange"
       />
     </div>

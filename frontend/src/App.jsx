@@ -217,7 +217,7 @@ const App = () => {
             path="/"
             element={
               <Dashboard
-                transactions={transaction}
+                transaction={transaction}
                 addTransaction={addTransaction}
                 editTransaction={editTransaction}
                 deleteTransaction={deleteTransaction}

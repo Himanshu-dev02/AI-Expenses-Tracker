@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { dashboardStyles, trendStyles, chartStyles } from "../assets/dummyStyles"
+import { dashboardStyles, trendStyles, chartStyles } from "../assets/dummyStyles.js"
 import {GAUGE_COLORS,
     INCOME_CATEGORY_ICONS,
     EXPENSE_CATEGORY_ICONS } from "../assets/color";
@@ -23,7 +23,9 @@ import {
         PieChart} from "lucide-react";
 import FinancialCard from "../components/FinancialCard";
 import GaugeCard from "../components/GaugeCard";
+import AddTransactionModal from "../components/Add";
 import { Cell, Legend, Pie, ResponsiveContainer, Tooltip } from "recharts";
+import { COLORS } from "../assets/dummy.js";
 
     const API_BASE = "http://localhost:4000/api";
 
@@ -672,6 +674,17 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      <AddTransactionModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        newTransaction={newTransaction}
+        setNewTransaction={setNewTransaction}
+        handleAddTransaction={handleAddTransaction}
+        type="both"
+        title="Add New Transaction"
+        buttonText="Add Transaction"
+        color="teal"
+      />
   </div>
 
   );
