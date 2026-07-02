@@ -1,11 +1,12 @@
 // controllers/receiptController.js
 import fs from "fs";
+import sharp from "sharp";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createWorker } from "tesseract.js";
 import expenseModel from "../models/expenseModel.js";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-pro";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 const cleanupTempFile = async (filePath) => {
   if (!filePath || !fs.existsSync(filePath)) return;
@@ -175,14 +176,19 @@ const extractWithLocalOcr = async (filePath) => {
 };
 
 // ---------------------------------------------------------------------------
-// Helper – convert saved image to base64 Parts for Gemini
+// Helper – resize/compress image and convert to base64 Part for Gemini
 // ---------------------------------------------------------------------------
-const imageToGenerativePart = (filePath, mimetype) => {
-  const buffer = fs.readFileSync(filePath);
+const imageToGenerativePart = async (filePath) => {
+  const buffer = await sharp(filePath)
+    .rotate() // auto-orient based on EXIF data
+    .resize({ width: 1500, withoutEnlargement: true })
+    .jpeg({ quality: 80 })
+    .toBuffer();
+
   return {
     inlineData: {
       data: buffer.toString("base64"),
-      mimeType: mimetype === "image/heic" ? "image/jpeg" : mimetype,
+      mimeType: "image/jpeg",
     },
   };
 };
@@ -198,41 +204,15 @@ export const scanReceipt = async (req, res) => {
   const filePath = req.file.path;
 
   try {
-     
-
-    const prompt = `Analyze this receipt image and extract the expense information.
-Return ONLY a valid JSON object with no markdown, no explanation, just the raw JSON.
-
-Required fields:
-{
-  "amount": <number, total amount paid>,
-  "date": "<ISO 8601 date string, e.g. 2024-01-15>",
-  "category": "<one of: Food, Housing, Transport, Shopping, Entertainment, Utilities, Healthcare, Other>",
-  "merchant": "<store or restaurant name>",
-  "description": "<brief description of the purchase>",
-  "confidence": "<high | medium | low based on image clarity>"
-}
-
-If a field cannot be determined from the receipt, use null for that field.
-Do not include currency symbols in the amount field, only the numeric value.`;
-
     // -----------------------------------------------------------------------
     // Gemini Vision call / Local OCR fallback
     // -----------------------------------------------------------------------
     let extractedData;
     try {
-      const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
-      const result = await model.generateContent([prompt, imagePart]);
-      const rawText = result.response.text().trim();
-
-      try {
-        extractedData = JSON.parse(rawText);
-      } catch {
-        const cleaned = rawText.replace(/```json|```/g, "").trim();
-        extractedData = JSON.parse(cleaned);
-      }
+      const imagePart = await imageToGenerativePart(filePath);
+      extractedData = await extractWithGemini(imagePart);
     } catch (geminiError) {
-      console.warn("Gemini scan outline/quota error, falling back to local OCR:", geminiError.message);
+      console.warn("Gemini scan failed, falling back to local OCR:", geminiError.message);
       try {
         extractedData = await extractWithLocalOcr(filePath);
       } catch (ocrError) {
@@ -262,9 +242,7 @@ Do not include currency symbols in the amount field, only the numeric value.`;
     // -----------------------------------------------------------------------
     // Clean up uploaded file after processing
     // -----------------------------------------------------------------------
-    fs.unlink(filePath, (err) => {
-      if (err) console.error("Failed to delete temp receipt file:", err.message);
-    });
+    await cleanupTempFile(filePath);
 
     return res.status(200).json({
       success: true,
@@ -275,7 +253,7 @@ Do not include currency symbols in the amount field, only the numeric value.`;
         : "Receipt scanned – review before saving",
     });
   } catch (error) {
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    await cleanupTempFile(filePath);
     console.error("Receipt scan error:", error.message);
     return res.status(500).json({
       success: false,
