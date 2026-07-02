@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { dashboardStyles, trendStyles, chartStyles } from "../assets/dummyStyles.js"
+import { dashboardStyles, trendStyles, chartStyles } from "../assets/dummyStyles"
 import {GAUGE_COLORS,
     INCOME_CATEGORY_ICONS,
     EXPENSE_CATEGORY_ICONS } from "../assets/color";
@@ -25,13 +25,13 @@ import FinancialCard from "../components/FinancialCard";
 import GaugeCard from "../components/GaugeCard";
 import AddTransactionModal from "../components/Add";
 import { Cell, Legend, Pie, ResponsiveContainer, Tooltip } from "recharts";
-import { COLORS } from "../assets/dummy.js";
+import { COLORS } from "../assets/dummy";
 
     const API_BASE = "http://localhost:4000/api";
 
     const getAuthHeader=() => {
       const token = 
-      localStorage.getItem("token") || localStorage.getItem("authToken");
+      localStorage.getItem("token") ||   sessionStorage.getItem("token") || localStorage.getItem("authToken");
       return token ? { Authorization: `Bearer ${token}`} : {};
     };
 
@@ -237,6 +237,7 @@ const Dashboard = () => {
      const fetchDashboardOverview = async () => {
       try {
         setLoading(true);
+        
         const res = await axios.get(`${API_BASE}/dashboard`,{
           headers: getAuthHeader(),
         });
@@ -420,7 +421,7 @@ const Dashboard = () => {
         <div className={dashboardStyles.arrowDownIconContainer}>
           <ArrowDown className=" w-5 h-5 text-orange-600"/>
         </div>
-      } label={`${timeFrameRange.label} Expenses`}  value={`$${Math.round(displayIncome - displayExpenses).toLocaleString()}`}
+      } label={`${timeFrameRange.label} Expenses`}  value={`${Math.round(displayIncome - displayExpenses).toLocaleString()}`}
       additionalContent={
          <div 
          className={`mt-2 text-xs flex items-center gap-1 ${
@@ -521,7 +522,7 @@ const Dashboard = () => {
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value) => [`$${Math.round(value).toLocaleString()}`, "Amount"]}
+                formatter={(value) => [`${Math.round(value).toLocaleString()}`, "Amount"]}
                 contentStyle={dashboardStyles.tooltipContent}
                 itemStyle={dashboardStyles.tooltipItem}
               />

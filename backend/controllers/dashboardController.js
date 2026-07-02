@@ -1,15 +1,16 @@
 import incomeModel from "../models/incomeModel.js";
 import expenseModel from "../models/expenseModel.js";
+import getDateRange from "../utils/dateFilter.js";
 
 export async function getDashboardOverview(req, res) {
 
     const userId = req.user._id;
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const range = req.query.range || "monthly";
+  const { start, end } = getDateRange(range);
     try {
-        const incomes = await incomeModel.find({ userId, date: { $gte: startOfMonth, $lte: now },
+    const incomes = await incomeModel.find({ userId, date: { $gte: start, $lte: end },
          }).lean();
-         const expenses = await expenseModel.find({ userId, date: { $gte: startOfMonth, $lte: now },
+     const expenses = await expenseModel.find({ userId, date: { $gte: start, $lte: end },
         }).lean();
         
 
@@ -45,6 +46,7 @@ export async function getDashboardOverview(req, res) {
             recentTransactions,
             spendByCategory,
             expenseDistribution,
+        range,
     }
 })
     }
