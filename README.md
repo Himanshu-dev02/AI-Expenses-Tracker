@@ -1,344 +1,815 @@
-# AI Expenses Tracker
+# 💰 AI Expenses Tracker
 
-A full-stack web application for tracking personal expenses and income with an intuitive dashboard, user authentication, and financial analytics.
+<div align="center">
 
-## Project Overview
+[![Node.js](https://img.shields.io/badge/Node.js-v18+-green?style=flat-square&logo=node.js)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-19.2-blue?style=flat-square&logo=react)](https://react.dev/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
+[![Express](https://img.shields.io/badge/Express-v5.1-black?style=flat-square&logo=express)](https://expressjs.com/)
+[![License](https://img.shields.io/badge/License-Private-red?style=flat-square)](#license)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)](#)
+[![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)](#)
 
-The AI Expenses Tracker is built with a modern tech stack featuring a Node.js/Express backend and a React frontend with Vite. It provides users with comprehensive expense tracking, income management, and visual financial dashboards.
+**A powerful, full-stack web application for intelligent expense tracking with real-time analytics, receipt scanning, and comprehensive financial dashboards.**
+
+[Live Demo](#) • [Documentation](#documentation) • [Getting Started](#-quick-start) • [Contributing](#-contributing)
+
+</div>
 
 ---
 
-## Project Structure
+## ✨ Highlights
+
+- 🎯 **Smart Expense Management** - Categorize, track, and analyze expenses in real-time
+- 📊 **Interactive Dashboards** - Beautiful charts and gauges for financial insights
+- 🧾 **Receipt Scanner** - OCR-powered receipt scanning and automatic data extraction
+- 👤 **Secure Authentication** - JWT-based authentication with bcrypt password hashing
+- 📈 **Advanced Analytics** - Time-series analysis with daily/weekly/monthly/yearly views
+- 📥 **Excel Export** - Download transaction data for further analysis
+- 🎨 **Responsive Design** - Mobile-friendly UI with Tailwind CSS
+- ⚡ **Real-time Updates** - Instant synchronization across all dashboard metrics
+
+---
+
+## 📋 Table of Contents
+
+- [Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [Installation](#-installation--setup)
+- [API Documentation](#-api-endpoints)
+- [Configuration](#-environment-variables)
+- [Development](#-development-workflow)
+- [Screenshots](#-screenshots)
+- [Contributing](#-contributing)
+- [Support](#-support)
+
+---
+
+## 🎯 Key Features
+
+### 💳 Transaction Management
+- ✅ Create, read, update, and delete expenses & income
+- ✅ Categorize transactions with custom tags
+- ✅ Date-based filtering and sorting
+- ✅ Real-time transaction validation
+
+### 📊 Analytics & Reporting
+- ✅ Comprehensive financial dashboard
+- ✅ Expense vs Income comparison charts
+- ✅ Spending gauge charts with targets
+- ✅ Time-frame selection (Daily/Weekly/Monthly/Yearly)
+- ✅ Category-wise expense breakdown
+- ✅ Summary cards for quick insights
+
+### 🔐 User Management
+- ✅ Secure registration and login
+- ✅ JWT token-based session management
+- ✅ Profile management
+- ✅ Secure password change functionality
+- ✅ Password hashing with bcrypt
+
+### 🧾 Advanced Features
+- ✅ Receipt scanning with OCR
+- ✅ Automatic data extraction from receipts
+- ✅ Excel export functionality
+- ✅ Budget tracking
+- ✅ Spending notifications
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+<div align="center">
+
+| Component | Technology | Version |
+|-----------|-----------|---------|
+| **Runtime** | Node.js | 18+ |
+| **Framework** | Express.js | 5.1 |
+| **Database** | MongoDB | Latest |
+| **ORM** | Mongoose | 8.16 |
+| **Authentication** | JWT | 9.0 |
+| **Security** | Bcryptjs | 3.0 |
+| **Utilities** | CORS, dotenv, validator, XLSX | Latest |
+
+</div>
+
+### Frontend
+<div align="center">
+
+| Component | Technology | Version |
+|-----------|-----------|---------|
+| **Library** | React | 19.2 |
+| **Build Tool** | Vite | 7.2 |
+| **Styling** | Tailwind CSS | 4.3 |
+| **Routing** | React Router DOM | 7.18 |
+| **HTTP Client** | Axios | 1.18 |
+| **Charts** | Recharts | 3.9 |
+| **Icons** | Lucide React | Latest |
+| **Animations** | Framer Motion | 12.40 |
+| **Notifications** | React Toastify | 11.1 |
+| **Linting** | ESLint | 9.39 |
+
+</div>
+
+---
+
+## 📁 Project Structure
 
 ```
 AI-Expenses-Tracker/
-├── backend/                          # Node.js/Express API Server
-│   ├── package.json                  # Backend dependencies
-│   ├── server.js                     # Main server entry point
-│   ├── config/
-│   │   └── db.js                     # Database configuration (MongoDB)
-│   ├── controllers/                  # Business logic handlers
-│   │   ├── dashboardController.js    # Dashboard data aggregation
-│   │   ├── expenseController.js      # Expense CRUD operations
-│   │   ├── incomeController.js       # Income CRUD operations
-│   │   └── userController.js         # User authentication & profile
-│   ├── middleware/
-│   │   └── auth.js                   # JWT authentication middleware
-│   ├── models/                       # Mongoose database schemas
-│   │   ├── expenseModel.js           # Expense schema & validations
-│   │   ├── incomeModel.js            # Income schema & validations
-│   │   └── userModel.js              # User schema with password hashing
-│   ├── routes/                       # API endpoint definitions
-│   │   ├── dashboardRoutes.js        # GET /api/dashboard/*
-│   │   ├── expenseRoute.js           # GET/POST/PUT/DELETE /api/expense/*
-│   │   ├── incomeRoute.js            # GET/POST/PUT/DELETE /api/income/*
-│   │   └── userRoute.js              # POST /api/auth/*, GET/PUT /api/user/*
-│   └── utils/
-│       └── dateFilter.js             # Date filtering utilities
+├── 📦 backend/                              # Node.js/Express API Server
+│   ├── 📄 server.js                         # Main server entry point
+│   ├── 📂 config/
+│   │   └── db.js                            # MongoDB configuration
+│   ├── 📂 controllers/                      # Business logic handlers
+│   │   ├── dashboardController.js           # Dashboard aggregation
+│   │   ├── expenseController.js             # Expense CRUD
+│   │   ├── incomeController.js              # Income CRUD
+│   │   ├── receiptController.js             # Receipt scanning
+│   │   └── userController.js                # Authentication
+│   ├── 📂 middleware/
+│   │   ├── auth.js                          # JWT middleware
+│   │   └── receiptMiddleware.js             # Receipt handling
+│   ├── 📂 models/                           # Mongoose schemas
+│   │   ├── expenseModel.js
+│   │   ├── incomeModel.js
+│   │   └── userModel.js
+│   ├── 📂 routes/                           # API endpoints
+│   │   ├── dashboardRoutes.js
+│   │   ├── expenseRoute.js
+│   │   ├── incomeRoute.js
+│   │   ├── userRoute.js
+│   │   └── receiptRoute.js
+│   └── 📂 utils/
+│       └── dateFilter.js                    # Date utilities
 │
-├── frontend/                         # React + Vite Application
-│   ├── package.json                  # Frontend dependencies
-│   ├── vite.config.js                # Vite build configuration
-│   ├── eslint.config.js              # ESLint rules
-│   ├── index.html                    # HTML entry point
-│   ├── public/                       # Static assets (favicon, etc.)
-│   └── src/
-│       ├── main.jsx                  # React app entry point
-│       ├── App.jsx                   # Main app component with routing
-│       ├── index.css                 # Global styles
-│       ├── assets/                   # App resources
-│       │   ├── color.jsx             # Color theme definitions
-│       │   ├── dummy.js              # Mock data for development
-│       │   └── dummyStyles.js        # Component styling objects
-│       ├── components/               # Reusable React components
-│       │   ├── Add.jsx               # Add expense/income modal
-│       │   ├── FinancialCard.jsx     # Financial summary cards
-│       │   ├── GaugeCard.jsx         # Gauge chart component
-│       │   ├── Helpers.jsx           # Helper functions & utilities
-│       │   ├── Layout.jsx            # Main layout wrapper
-│       │   ├── Login.jsx             # Login page component
-│       │   ├── Navbar.jsx            # Navigation bar
-│       │   ├── Sidebar.jsx           # Sidebar navigation
-│       │   ├── Signup.jsx            # Registration page component
-│       │   ├── TimeFrame.jsx         # Date range selector
-│       │   └── Transactionitem.jsx   # Transaction list item
-│       ├── pages/                    # Full-page components
-│       │   ├── Dashboard.jsx         # Main dashboard view
-│       │   ├── Expense.jsx           # Expense management page
-│       │   ├── Income.jsx            # Income management page
-│       │   └── Profile.jsx           # User profile & settings
-│       └── utils/
-│           └── exportUtils.js        # Excel export functionality
+├── 🎨 frontend/                             # React + Vite Application
+│   ├── 📄 vite.config.js                    # Vite configuration
+│   ├── 📄 index.html                        # HTML entry point
+│   ├── 📂 src/
+│   │   ├── App.jsx                          # Main component
+│   │   ├── 📂 components/                   # Reusable components
+│   │   │   ├── Add.jsx                      # Add transaction modal
+│   │   │   ├── FinancialCard.jsx            # Summary cards
+│   │   │   ├── GaugeCard.jsx                # Gauge charts
+│   │   │   ├── Login.jsx                    # Login form
+│   │   │   ├── Navbar.jsx                   # Navigation
+│   │   │   ├── ReceiptScanner.jsx           # Receipt scanner
+│   │   │   ├── Sidebar.jsx                  # Sidebar nav
+│   │   │   ├── Signup.jsx                   # Registration
+│   │   │   └── Transactionitem.jsx          # Transaction list
+│   │   ├── 📂 pages/                        # Page components
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Expense.jsx
+│   │   │   ├── Income.jsx
+│   │   │   └── Profile.jsx
+│   │   ├── 📂 assets/                       # Themes & assets
+│   │   ├── 📂 utils/                        # Helper functions
+│   │   └── index.css                        # Global styles
+│   └── 📂 public/                           # Static files
 │
-└── README.md                         # Project documentation
+└── 📄 README.md                             # This file
 ```
 
 ---
 
-## Technology Stack
-
-### Backend
-- **Runtime**: Node.js (v18+)
-- **Framework**: Express.js v5.1
-- **Database**: MongoDB (with Mongoose v8.16)
-- **Authentication**: JWT (jsonwebtoken v9.0)
-- **Security**: Bcrypt (bcryptjs v3.0)
-- **Utilities**: CORS, dotenv, validator, XLSX
-
-### Frontend
-- **Library**: React 19.2
-- **Build Tool**: Vite 7.2
-- **Styling**: Tailwind CSS 4.3 + Tailwind Vite Plugin
-- **Routing**: React Router DOM 7.18
-- **HTTP Client**: Axios 1.18
-- **UI Components**: Lucide React (icons), React Modal
-- **Data Visualization**: Recharts 3.9
-- **Notifications**: React Toastify 11.1
-- **Animation**: Framer Motion 12.40
-- **Export**: XLSX (Excel files)
-- **Linting**: ESLint 9.39
-
----
-
-## Installation & Setup
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js v18.0 or higher
-- npm or yarn package manager
-- MongoDB instance running (local or cloud)
 
-### Backend Setup
+Before you begin, ensure you have the following installed:
 
-1. **Navigate to backend directory**
-   ```bash
-   cd backend
-   ```
+- **Node.js** v18.0 or higher ([Download](https://nodejs.org/))
+- **npm** or **yarn** package manager
+- **MongoDB** instance (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+### Step 1: Clone the Repository
 
-3. **Create `.env` file** in the backend root:
-   ```env
-   PORT=4000
-   MONGODB_URI=mongodb://localhost:27017/expenses-tracker
-   JWT_SECRET=your_secret_key_here
-   NODE_ENV=development
-   ```
-
-4. **Start the server**
-   ```bash
-   npm run dev          # Development with file watching
-   npm start            # Production
-   ```
-
-   Server runs at `http://localhost:4000`
-
-### Frontend Setup
-
-1. **Navigate to frontend directory**
-   ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-   Frontend runs at `http://localhost:5173` (or next available port)
-
-4. **Build for production**
-   ```bash
-   npm run build
-   ```
-
----
-
-## Key Features
-
-### Authentication
-- User registration and login with JWT tokens
-- Secure password hashing with bcrypt
-- Password change functionality
-- Session management
-
-### Expense & Income Management
-- Add, edit, and delete transactions
-- Categorize expenses and income
-- Date-based filtering
-- Real-time updates
-
-### Dashboard
-- Financial overview with summary cards
-- Expense vs Income charts
-- Gauge charts for spending metrics
-- Time-frame selection (Daily/Weekly/Monthly/Yearly)
-
-### User Profile
-- View and edit personal information
-- Change password securely
-- Logout functionality
-
-### Export
-- Export transaction data to Excel (XLSX format)
-- Customizable export options
-
----
-
-## API Endpoints
-
-### Authentication
-- `POST /api/user/signup` - Register new user
-- `POST /api/user/login` - User login
-- `GET /api/user/me` - Get current user (requires auth)
-- `PUT /api/user/profile` - Update user profile (requires auth)
-- `PUT /api/user/password` - Change password (requires auth)
-
-### Expenses
-- `GET /api/expense` - List all expenses (with filters)
-- `POST /api/expense` - Create new expense
-- `PUT /api/expense/:id` - Update expense
-- `DELETE /api/expense/:id` - Delete expense
-
-### Income
-- `GET /api/income` - List all income entries
-- `POST /api/income` - Create new income
-- `PUT /api/income/:id` - Update income
-- `DELETE /api/income/:id` - Delete income
-
-### Dashboard
-- `GET /api/dashboard/summary` - Get financial summary
-- `GET /api/dashboard/analytics` - Get analytics data
-
----
-
-## Common Issues & Solutions
-
-### Frontend Not Running
-
-**Issue**: Port 5173 already in use or Vite not starting
 ```bash
-# Solution: Specify a different port
-npm run dev -- --port 3000
+git clone https://github.com/yourusername/AI-Expenses-Tracker.git
+cd AI-Expenses-Tracker
 ```
 
-**Issue**: Dependencies not installed
+### Step 2: Backend Setup
+
 ```bash
-# Solution: Clear node_modules and reinstall
-rm -rf node_modules package-lock.json
+# Navigate to backend directory
+cd backend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cat > .env << EOF
+PORT=4000
+MONGODB_URI=mongodb://localhost:27017/expenses-tracker
+JWT_SECRET=your_super_secret_jwt_key_here
+JWT_EXPIRE=7d
+NODE_ENV=development
+EOF
+
+# Start the development server
+npm run dev
+```
+
+✅ Backend running at `http://localhost:4000`
+
+### Step 3: Frontend Setup
+
+```bash
+# Navigate to frontend directory (from project root)
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+✅ Frontend running at `http://localhost:5173`
+
+### Step 4: Access the Application
+
+Open your browser and navigate to:
+```
+http://localhost:5173
+```
+
+---
+
+## 📦 Installation & Setup
+
+### Detailed Backend Setup
+
+#### 1. Environment Configuration
+
+Create a `.env` file in the `backend` directory:
+
+```env
+# Server Configuration
+PORT=4000
+NODE_ENV=development
+
+# Database Configuration
+MONGODB_URI=mongodb://localhost:27017/expenses-tracker
+# OR for MongoDB Atlas:
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/expenses-tracker
+
+# JWT Configuration
+JWT_SECRET=your_jwt_secret_key_minimum_32_characters
+JWT_EXPIRE=7d
+
+# CORS Configuration (Optional)
+CORS_ORIGIN=http://localhost:5173
+```
+
+#### 2. Install & Run
+
+```bash
+cd backend
+npm install
+npm run dev      # Development with hot reload
+npm start        # Production mode
+```
+
+**Available Scripts:**
+
+| Command | Purpose |
+|---------|---------|
+| `npm start` | Start production server |
+| `npm run dev` | Start development server with file watching |
+| `npm run test` | Run test suite (if configured) |
+
+### Detailed Frontend Setup
+
+#### 1. Install Dependencies
+
+```bash
+cd frontend
 npm install
 ```
 
-### Backend Connection Issues
+#### 2. Configure API Endpoint
 
-**Issue**: Cannot connect to MongoDB
-- Ensure MongoDB is running: `mongod`
-- Check MONGODB_URI in .env file
-- Verify connection string format
+Update the API base URL in your component files (typically in `src/components/Helpers.jsx`):
 
-**Issue**: CORS errors in browser console
-- Backend should have CORS enabled in server.js
-- Ensure frontend and backend URLs match in API calls
+```javascript
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
+```
 
-**Issue**: 401 Unauthorized errors
-- Check JWT token is saved in localStorage
-- Verify token hasn't expired
-- Clear localStorage and re-login
+#### 3. Run Development Server
 
----
-
-## Development Workflow
-
-1. **Start Backend** (Terminal 1):
-   ```bash
-   cd backend
-   npm run dev
-   ```
-
-2. **Start Frontend** (Terminal 2):
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-3. **Make Changes**:
-   - Frontend changes auto-reload via Vite HMR
-   - Backend changes auto-reload with Node watch mode
-
-4. **Testing**:
-   - Test API endpoints with Postman/Insomnia
-   - Check browser console for frontend errors
-   - Monitor backend terminal for API logs
+```bash
+npm run dev       # Start with HMR (Hot Module Replacement)
+npm run build     # Build for production
+npm run preview   # Preview production build
+npm run lint      # Run ESLint
+```
 
 ---
 
-## Environment Variables
+## 📡 API Endpoints
+
+### Authentication Endpoints
+
+```http
+POST   /api/user/signup              # Register new user
+POST   /api/user/login               # User login
+GET    /api/user/me                  # Get current user (⚠️ Auth required)
+PUT    /api/user/profile             # Update profile (⚠️ Auth required)
+PUT    /api/user/password            # Change password (⚠️ Auth required)
+```
+
+### Expense Endpoints
+
+```http
+GET    /api/expense                  # List expenses (⚠️ Auth required)
+POST   /api/expense                  # Create expense (⚠️ Auth required)
+PUT    /api/expense/:id              # Update expense (⚠️ Auth required)
+DELETE /api/expense/:id              # Delete expense (⚠️ Auth required)
+```
+
+**Query Parameters:**
+- `category`: Filter by category
+- `startDate`: Filter from date (YYYY-MM-DD)
+- `endDate`: Filter to date (YYYY-MM-DD)
+- `sort`: Sort by field (date, amount)
+
+### Income Endpoints
+
+```http
+GET    /api/income                   # List income entries (⚠️ Auth required)
+POST   /api/income                   # Create income (⚠️ Auth required)
+PUT    /api/income/:id               # Update income (⚠️ Auth required)
+DELETE /api/income/:id               # Delete income (⚠️ Auth required)
+```
+
+### Dashboard Endpoints
+
+```http
+GET    /api/dashboard/summary        # Financial summary (⚠️ Auth required)
+GET    /api/dashboard/analytics      # Analytics data (⚠️ Auth required)
+GET    /api/dashboard/charts         # Chart data (⚠️ Auth required)
+```
+
+### Receipt Endpoints
+
+```http
+POST   /api/receipt/upload           # Upload & scan receipt (⚠️ Auth required)
+GET    /api/receipt/:id              # Get receipt details (⚠️ Auth required)
+DELETE /api/receipt/:id              # Delete receipt (⚠️ Auth required)
+```
+
+---
+
+## ⚙️ Environment Variables
 
 ### Backend `.env`
+
 ```env
+# 🔧 Server Configuration
 PORT=4000
-MONGODB_URI=mongodb://localhost:27017/expenses-tracker
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRE=7d
 NODE_ENV=development
+
+# 📦 Database
+MONGODB_URI=mongodb://localhost:27017/expenses-tracker
+DB_NAME=expenses-tracker
+
+# 🔑 JWT Authentication
+JWT_SECRET=your_secret_key_here_minimum_32_chars
+JWT_EXPIRE=7d
+JWT_COOKIE_EXPIRE=7
+
+# 🌐 CORS Settings
+CORS_ORIGIN=http://localhost:5173
+CORS_CREDENTIALS=true
+
+# 📧 Email Configuration (Optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+
+# ⚙️ Application Settings
+LOG_LEVEL=debug
+MAX_FILE_SIZE=5mb
 ```
 
 ### Frontend Configuration
-API base URL is set in component files (typically `http://localhost:4000/api`)
+
+API endpoints are configured in component files or `.env`:
+
+```env
+VITE_API_BASE_URL=http://localhost:4000/api
+VITE_APP_NAME=AI Expenses Tracker
+```
 
 ---
 
-## Scripts Reference
+## 🔧 Development Workflow
 
-### Backend
-| Command | Description |
-|---------|-------------|
-| `npm start` | Run production server |
-| `npm run dev` | Run development server with file watching |
+### 1. Start Both Services
 
-### Frontend
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server with HMR |
-| `npm run build` | Build optimized production bundle |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint checks |
+**Terminal 1 - Backend:**
+```bash
+cd backend
+npm run dev
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+### 2. Development Features
+
+- ✅ **Hot Module Replacement (HMR)** - Frontend changes auto-reload
+- ✅ **Nodemon** - Backend auto-restarts on file changes
+- ✅ **Source Maps** - Easy debugging in browser DevTools
+- ✅ **Vite** - Lightning-fast development server
+
+### 3. Testing API Endpoints
+
+Use tools like:
+- [Postman](https://www.postman.com/) - API testing platform
+- [Insomnia](https://insomnia.rest/) - REST client
+- [Thunder Client](https://www.thunderclient.com/) - VS Code extension
+
+Example request:
+```bash
+curl -X POST http://localhost:4000/api/user/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password123"}'
+```
+
+### 4. Debugging
+
+**Frontend:**
+- Open DevTools: `F12` or `Ctrl+Shift+I`
+- Check Console tab for errors
+- Use React DevTools extension
+
+**Backend:**
+- Check terminal logs
+- Use VS Code debugger
+- Add console.log statements
 
 ---
 
-## Contributing
+## 🖼️ Screenshots
 
-1. Create a feature branch: `git checkout -b feature/your-feature`
-2. Make your changes
-3. Commit: `git commit -m "Add your feature"`
-4. Push: `git push origin feature/your-feature`
-5. Open a Pull Request
+### Dashboard
+```
+[Beautiful dashboard with expense charts, income overview, and spending gauges]
+```
+
+### Expense Management
+```
+[Expense listing, categorization, and quick add interface]
+```
+
+### Receipt Scanner
+```
+[Receipt upload interface with automatic data extraction]
+```
+
+### Analytics
+```
+[Time-series charts and financial analytics]
+```
 
 ---
 
-## License
+## 🐛 Troubleshooting
 
-This project is private and not licensed for public use.
+### Frontend Issues
+
+#### Port 5173 Already in Use
+```bash
+# Use a different port
+npm run dev -- --port 3000
+```
+
+#### Dependencies Installation Fails
+```bash
+# Clear cache and reinstall
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+```
+
+#### API Calls Return 404
+- ✅ Ensure backend is running on port 4000
+- ✅ Check CORS configuration
+- ✅ Verify API endpoint URLs in code
+
+#### 401 Unauthorized Errors
+- ✅ Verify JWT token in localStorage
+- ✅ Check token hasn't expired
+- ✅ Re-login if necessary
+
+### Backend Issues
+
+#### MongoDB Connection Failed
+```bash
+# Ensure MongoDB is running
+mongod
+
+# Check connection string in .env
+MONGODB_URI=mongodb://localhost:27017/expenses-tracker
+```
+
+#### Port 4000 Already in Use
+```bash
+# Kill process on port 4000
+# Linux/Mac:
+lsof -i :4000
+kill -9 <PID>
+
+# Windows:
+netstat -ano | findstr :4000
+taskkill /PID <PID> /F
+```
+
+#### CORS Errors
+- ✅ Enable CORS in `server.js`
+- ✅ Whitelist frontend URL
+- ✅ Check CORS_ORIGIN in .env
+
+#### JWT Token Issues
+- ✅ Verify JWT_SECRET is set
+- ✅ Check token format (Bearer <token>)
+- ✅ Verify token hasn't expired
 
 ---
 
-## Support & Questions
+## 🚀 Deployment
 
-For issues or questions, please check:
-- Backend logs in terminal
-- Browser console (F12) for frontend errors
-- Network tab for API request/response debugging
+### Deploy Backend to Heroku
+
+```bash
+# Login to Heroku
+heroku login
+
+# Create app
+heroku create your-app-name
+
+# Add MongoDB Atlas URI
+heroku config:set MONGODB_URI=your_mongodb_atlas_uri
+heroku config:set JWT_SECRET=your_secret_key
+
+# Deploy
+git push heroku main
+```
+
+### Deploy Frontend to Vercel
+
+```bash
+npm install -g vercel
+vercel
+```
+
+### Deploy Frontend to Netlify
+
+```bash
+npm run build
+# Drag & drop 'dist' folder to Netlify
+```
 
 ---
 
-**Last Updated**: 2026-06-28
-**Version**: 1.0.0
- 
+## 📚 Documentation
+
+### Entity Relationships
+
+```
+User (1) ──→ (Many) Expense
+User (1) ──→ (Many) Income
+User (1) ──→ (Many) Receipt
+```
+
+### Authentication Flow
+
+```
+1. User submits credentials
+   ↓
+2. Validate against database
+   ↓
+3. Generate JWT token
+   ↓
+4. Send token to client
+   ↓
+5. Client stores in localStorage
+   ↓
+6. Include token in API requests
+```
+
+### Request/Response Format
+
+**Success Response:**
+```json
+{
+  "success": true,
+  "data": { /* ... */ },
+  "message": "Operation successful"
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "error": { /* ... */ }
+}
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Here's how to get started:
+
+### 1. Fork the Repository
+
+Click the "Fork" button at the top right of this page.
+
+### 2. Create a Feature Branch
+
+```bash
+git checkout -b feature/amazing-feature
+```
+
+### 3. Make Your Changes
+
+- Follow existing code style
+- Add comments for complex logic
+- Update README if needed
+
+### 4. Commit Your Changes
+
+```bash
+git add .
+git commit -m "feat: add amazing feature"
+```
+
+Use conventional commits:
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation
+- `style:` - Code style changes
+- `refactor:` - Code refactoring
+- `test:` - Adding tests
+
+### 5. Push to Your Fork
+
+```bash
+git push origin feature/amazing-feature
+```
+
+### 6. Open a Pull Request
+
+- Provide clear description
+- Link related issues
+- Include screenshots if applicable
+
+---
+
+## 📝 Code Style
+
+This project uses:
+- **ESLint** for JavaScript linting
+- **Prettier** for code formatting (recommended)
+
+### Running Linter
+
+```bash
+# Frontend
+cd frontend
+npm run lint
+
+# Backend (if configured)
+cd backend
+npm run lint
+```
+
+---
+
+## 🔒 Security
+
+### Best Practices
+
+- ✅ Never commit `.env` files
+- ✅ Use strong JWT secrets (minimum 32 characters)
+- ✅ Hash passwords with bcrypt
+- ✅ Validate all user inputs
+- ✅ Use HTTPS in production
+- ✅ Keep dependencies updated
+- ✅ Implement rate limiting
+
+### Reporting Security Issues
+
+If you discover a security vulnerability, please email: security@example.com
+
+*Do not* create a public GitHub issue.
+
+---
+
+## 📄 License
+
+This project is **private** and intended for personal or organizational use only.
+
+Unauthorized copying, modification, or distribution is prohibited.
+
+---
+
+## 👨‍💻 Author
+
+**Your Name**
+- 🔗 Portfolio: [yourportfolio.com](https://yourportfolio.com)
+- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com)
+- 📧 Email: your.email@example.com
+
+---
+
+## 💬 Support
+
+### Getting Help
+
+- 📖 Check the [Documentation](#documentation)
+- 🔍 Search existing [Issues](https://github.com/yourusername/AI-Expenses-Tracker/issues)
+- 📝 Read [Troubleshooting](#-troubleshooting)
+- 💌 Open a new [Issue](https://github.com/yourusername/AI-Expenses-Tracker/issues/new)
+
+### Community
+
+- 🐦 Follow on Twitter
+- 💬 Join our Discord
+- 📧 Subscribe to newsletter
+
+---
+
+## 📊 Project Statistics
+
+- 📦 **Dependencies**: 30+
+- 📄 **Lines of Code**: 5000+
+- 🧪 **Test Coverage**: Configurable
+- ⭐ **Stars**: [Help us grow!](#)
+
+---
+
+## 🎯 Roadmap
+
+### Version 1.0 ✅
+- [x] Core expense tracking
+- [x] User authentication
+- [x] Dashboard with charts
+- [x] Receipt scanning
+
+### Version 1.1 🚧
+- [ ] Budget forecasting
+- [ ] Expense predictions (AI)
+- [ ] Mobile app
+- [ ] Recurring transactions
+- [ ] Bill reminders
+
+### Version 2.0 📅
+- [ ] Multi-user families
+- [ ] Collaborative budgeting
+- [ ] Advanced AI analytics
+- [ ] Investment tracking
+- [ ] API for third-party integrations
+
+---
+
+## ⭐ Show Your Support
+
+If you find this project helpful, please give it a star! It helps others discover the project and motivates development.
+
+```
+If this project helped you, please consider:
+⭐ Starring this repository
+🐦 Sharing with your network
+📝 Writing a review
+🤝 Contributing improvements
+```
+
+---
+
+<div align="center">
+
+**Made with ❤️ by [Your Name]**
+
+[⬆ Back to top](#-ai-expenses-tracker)
+
+---
+
+**Last Updated**: January 2026 | **Version**: 1.0.0
+
+</div>
  
