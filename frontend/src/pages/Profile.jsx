@@ -114,7 +114,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
           setUser(userData);
           setTempUser(userData);
         }
-      } catch (err) {
+      } catch (error) {
         toast.error("Failed to load user data");
       }
     };
@@ -154,7 +154,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
 
       }
 
-    } catch (err) {
+    } catch (error) {
       toast.error(error.response?.data?.message || "Failed to Update profile");
     }
   };
@@ -191,7 +191,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
       });
       toast.success("password change succeessfully!");
       setShowPasswordModal(false);
-      setPasswordData({ current: "", confirm: "" });
+      setPasswordData({ current: "",  new: "", confirm: "" });
       setPasswordErrors({});
 
       // reset password visibility
@@ -209,7 +209,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
   const closePasswordModal = useCallback(() => {
     if (!loading) {
       setShowPasswordModal(false);
-      setPasswordData({ currrent: "", new: "", confirm: "" });
+      setPasswordData({ current: "", new: "", confirm: "" });
       setPasswordErrors({});
 
       //reset password visibility
@@ -299,7 +299,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
 
                   <div>
                     <p className={profileStyles.label}>Email Address</p>
-                    <p className="font-medium text-gray-800">{user.name}</p>
+                    <p className="font-medium text-gray-800">{user.email}</p>
                   </div>
 
                 </div>
@@ -316,7 +316,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
                   <div>
                     <p className={profileStyles.securityText}>Password</p>
                   </div>
-                  <button onClick={() => setShowPassword(true)}
+                  <button onClick={() => setShowPasswordModal(true)}
                     className={profileStyles.changeButton} disabled={loading}>
                     Change
                   </button>
