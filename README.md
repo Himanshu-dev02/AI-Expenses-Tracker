@@ -232,13 +232,7 @@ npm run dev
 
 ✅ Frontend running at `http://localhost:5173`
 
-### Step 4: Access the Application
-
-Open your browser and navigate to:
-```
-http://localhost:5173
-```
-
+ 
 ---
 
 ## 📦 Installation & Setup
@@ -276,13 +270,7 @@ npm run dev      # Development with hot reload
 npm start        # Production mode
 ```
 
-**Available Scripts:**
-
-| Command | Purpose |
-|---------|---------|
-| `npm start` | Start production server |
-| `npm run dev` | Start development server with file watching |
-| `npm run test` | Run test suite (if configured) |
+ 
 
 ### Detailed Frontend Setup
 
@@ -293,13 +281,7 @@ cd frontend
 npm install
 ```
 
-#### 2. Configure API Endpoint
-
-Update the API base URL in your component files (typically in `src/components/Helpers.jsx`):
-
-```javascript
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
-```
+ 
 
 #### 3. Run Development Server
 
@@ -333,11 +315,7 @@ PUT    /api/expense/:id              # Update expense (⚠️ Auth required)
 DELETE /api/expense/:id              # Delete expense (⚠️ Auth required)
 ```
 
-**Query Parameters:**
-- `category`: Filter by category
-- `startDate`: Filter from date (YYYY-MM-DD)
-- `endDate`: Filter to date (YYYY-MM-DD)
-- `sort`: Sort by field (date, amount)
+* 
 
 ### Income Endpoints
 
@@ -384,19 +362,8 @@ JWT_SECRET=your_secret_key_here_minimum_32_chars
 JWT_EXPIRE=7d
 JWT_COOKIE_EXPIRE=7
 
-# 🌐 CORS Settings
-CORS_ORIGIN=http://localhost:5173
-CORS_CREDENTIALS=true
-
-# 📧 Email Configuration (Optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
-
-# ⚙️ Application Settings
-LOG_LEVEL=debug
-MAX_FILE_SIZE=5mb
+ 
+ 
 ```
 
 ### Frontend Configuration
@@ -433,20 +400,9 @@ npm run dev
 - ✅ **Source Maps** - Easy debugging in browser DevTools
 - ✅ **Vite** - Lightning-fast development server
 
-### 3. Testing API Endpoints
+ 
 
-Use tools like:
-- [Postman](https://www.postman.com/) - API testing platform
-- [Insomnia](https://insomnia.rest/) - REST client
-- [Thunder Client](https://www.thunderclient.com/) - VS Code extension
-
-Example request:
-```bash
-curl -X POST http://localhost:4000/api/user/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","password":"password123"}'
-```
-
+ 
 ### 4. Debugging
 
 **Frontend:**
@@ -547,25 +503,8 @@ taskkill /PID <PID> /F
 - ✅ Verify token hasn't expired
 
 ---
-
-## 🚀 Deployment
-
-### Deploy Backend to Heroku
-
-```bash
-# Login to Heroku
-heroku login
-
-# Create app
-heroku create your-app-name
-
-# Add MongoDB Atlas URI
-heroku config:set MONGODB_URI=your_mongodb_atlas_uri
-heroku config:set JWT_SECRET=your_secret_key
-
-# Deploy
-git push heroku main
-```
+ 
+ 
 
 ### Deploy Frontend to Vercel
 
@@ -608,27 +547,7 @@ User (1) ──→ (Many) Receipt
    ↓
 6. Include token in API requests
 ```
-
-### Request/Response Format
-
-**Success Response:**
-```json
-{
-  "success": true,
-  "data": { /* ... */ },
-  "message": "Operation successful"
-}
-```
-
-**Error Response:**
-```json
-{
-  "success": false,
-  "message": "Error description",
-  "error": { /* ... */ }
-}
-```
-
+ 
 ---
 
 ## 🤝 Contributing
@@ -712,47 +631,24 @@ npm run lint
 - ✅ Keep dependencies updated
 - ✅ Implement rate limiting
 
-### Reporting Security Issues
-
-If you discover a security vulnerability, please email: security@example.com
-
-*Do not* create a public GitHub issue.
-
----
-
-## 📄 License
-
-This project is **private** and intended for personal or organizational use only.
-
-Unauthorized copying, modification, or distribution is prohibited.
-
+ 
+ 
+ 
 ---
 
 ## 👨‍💻 Author
 
-**Your Name**
-- 🔗 Portfolio: [yourportfolio.com](https://yourportfolio.com)
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com)
-- 📧 Email: your.email@example.com
+**Himanshu Meshram**
+- 🔗 Portfolio: [portfolio.com](https://himanshumeshram.netlify.app/)
+- 💼 LinkedIn: [linkedin.com](www.linkedin.com/in/himanshu-meshram-hm)
+- 📧 Email: [EMAIL_ADDRESS]
 
 ---
 
-## 💬 Support
+ 
 
-### Getting Help
-
-- 📖 Check the [Documentation](#documentation)
-- 🔍 Search existing [Issues](https://github.com/yourusername/AI-Expenses-Tracker/issues)
-- 📝 Read [Troubleshooting](#-troubleshooting)
-- 💌 Open a new [Issue](https://github.com/yourusername/AI-Expenses-Tracker/issues/new)
-
-### Community
-
-- 🐦 Follow on Twitter
-- 💬 Join our Discord
-- 📧 Subscribe to newsletter
-
----
+ 
+ 
 
 ## 📊 Project Statistics
 
@@ -763,29 +659,7 @@ Unauthorized copying, modification, or distribution is prohibited.
 
 ---
 
-## 🎯 Roadmap
-
-### Version 1.0 ✅
-- [x] Core expense tracking
-- [x] User authentication
-- [x] Dashboard with charts
-- [x] Receipt scanning
-
-### Version 1.1 🚧
-- [ ] Budget forecasting
-- [ ] Expense predictions (AI)
-- [ ] Mobile app
-- [ ] Recurring transactions
-- [ ] Bill reminders
-
-### Version 2.0 📅
-- [ ] Multi-user families
-- [ ] Collaborative budgeting
-- [ ] Advanced AI analytics
-- [ ] Investment tracking
-- [ ] API for third-party integrations
-
----
+ 
 
 ## ⭐ Show Your Support
 
@@ -803,13 +677,13 @@ If this project helped you, please consider:
 
 <div align="center">
 
-**Made with ❤️ by [Your Name]**
+**Made with ❤️ by [Himasnu Meshram]**
 
 [⬆ Back to top](#-ai-expenses-tracker)
 
----
+ 
 
-**Last Updated**: January 2026 | **Version**: 1.0.0
+ 
 
 </div>
  
