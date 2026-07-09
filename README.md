@@ -272,25 +272,6 @@ npm start        # Production mode
 
  
 
-### Detailed Frontend Setup
-
-#### 1. Install Dependencies
-
-```bash
-cd frontend
-npm install
-```
-
- 
-
-#### 3. Run Development Server
-
-```bash
-npm run dev       # Start with HMR (Hot Module Replacement)
-npm run build     # Build for production
-npm run preview   # Preview production build
-npm run lint      # Run ESLint
-```
 
 ---
 
@@ -343,28 +324,7 @@ DELETE /api/receipt/:id              # Delete receipt (⚠️ Auth required)
 ```
 
 ---
-
-## ⚙️ Environment Variables
-
-### Backend `.env`
-
-```env
-# 🔧 Server Configuration
-PORT=4000
-NODE_ENV=development
-
-# 📦 Database
-MONGODB_URI=mongodb://localhost:27017/expenses-tracker
-DB_NAME=expenses-tracker
-
-# 🔑 JWT Authentication
-JWT_SECRET=your_secret_key_here_minimum_32_chars
-JWT_EXPIRE=7d
-JWT_COOKIE_EXPIRE=7
-
  
- 
-```
 
 ### Frontend Configuration
 
@@ -375,23 +335,8 @@ VITE_API_BASE_URL=http://localhost:4000/api
 VITE_APP_NAME=AI Expenses Tracker
 ```
 
----
-
-## 🔧 Development Workflow
-
-### 1. Start Both Services
-
-**Terminal 1 - Backend:**
-```bash
-cd backend
-npm run dev
-```
-
-**Terminal 2 - Frontend:**
-```bash
-cd frontend
-npm run dev
-```
+ 
+ 
 
 ### 2. Development Features
 
@@ -513,14 +458,9 @@ npm install -g vercel
 vercel
 ```
 
-### Deploy Frontend to Netlify
+ 
 
-```bash
-npm run build
-# Drag & drop 'dist' folder to Netlify
-```
-
----
+ 
 
 ## 📚 Documentation
 
@@ -641,7 +581,7 @@ npm run lint
 **Himanshu Meshram**
 - 🔗 Portfolio: [portfolio.com](https://himanshumeshram.netlify.app/)
 - 💼 LinkedIn: [linkedin.com](www.linkedin.com/in/himanshu-meshram-hm)
-- 📧 Email: [EMAIL_ADDRESS]
+- 📧 Email: [EMAIL_ADDRESS](meshramhimanshu20@gmail.com)
 
 ---
 
