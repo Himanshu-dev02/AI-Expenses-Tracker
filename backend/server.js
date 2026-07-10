@@ -8,6 +8,7 @@ import incomeRouter from './routes/incomeRoute.js';
 import expenseRouter from './routes/expenseRoute.js';
 import dashboardRouter from './routes/dashboardRoutes.js';
 import receiptRouter from './routes/receiptRoute.js';
+import predictionRouter from './routes/predictionRoute.js';
 
 const app = express();
 const PORT = 4000;
@@ -31,6 +32,7 @@ app.use("/api/expense", expenseRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/receipt", receiptRouter);
 app.use("/uploads", express.static("uploads"));
+app.use("/api/prediction", predictionRouter);
 
 app.get('/', (req, res) => {
     res.send("API WORKING!");
