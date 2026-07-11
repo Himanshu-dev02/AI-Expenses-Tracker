@@ -26,6 +26,7 @@ import GaugeCard from "../components/GaugeCard";
 import AddTransactionModal from "../components/Add";
 import { Cell, Legend, Pie, ResponsiveContainer, Tooltip } from "recharts";
 import { COLORS } from "../assets/dummy";
+import SpendingPrediction from "../components/SpendingPrediction";
 
     const API_BASE = "http://localhost:4000/api";
 
@@ -675,6 +676,12 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+        {/* ── AI Spending Prediction ── */}
+      <div className={dashboardStyles.listContainer}>
+        <SpendingPrediction />
+      </div>
+
       <AddTransactionModal
         showModal={showModal}
         setShowModal={setShowModal}
