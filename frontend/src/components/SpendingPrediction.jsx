@@ -55,8 +55,8 @@ const ConfidenceDot = ({ confidence }) => {
     confidence === "high"
       ? "bg-teal-400"
       : confidence === "medium"
-      ? "bg-yellow-400"
-      : "bg-red-400";
+        ? "bg-yellow-400"
+        : "bg-red-400";
   return (
     <span className="flex items-center gap-1 text-xs text-gray-400 capitalize">
       <span className={`w-2 h-2 rounded-full ${color}`} />
@@ -75,7 +75,7 @@ const SpendingPrediction = () => {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const { data: res } = await axios.get(
         `${BASE_URL}/api/prediction/next-month`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -103,15 +103,15 @@ const SpendingPrediction = () => {
   // Shape Recharts needs: [{ category: "Food", actual: 1100, predicted: 1250 }, ...]
   const chartData = data
     ? data.predictions.map((p) => {
-        // actual = last month's value for this category from history
-        const catHistory = data.history.categories[p.category] || [];
-        const actual = catHistory[catHistory.length - 1] || 0;
-        return {
-          category: p.category,
-          actual: Math.round(actual),
-          predicted: Math.round(p.predicted),
-        };
-      })
+      // actual = last month's value for this category from history
+      const catHistory = data.history.categories[p.category] || [];
+      const actual = catHistory[catHistory.length - 1] || 0;
+      return {
+        category: p.category,
+        actual: Math.round(actual),
+        predicted: Math.round(p.predicted),
+      };
+    })
     : [];
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -184,9 +184,8 @@ const SpendingPrediction = () => {
                 const pct = ((delta / data.lastMonthTotal) * 100).toFixed(1);
                 return (
                   <p
-                    className={`text-xs mt-1 ${
-                      delta > 0 ? "text-red-400" : "text-teal-400"
-                    }`}
+                    className={`text-xs mt-1 ${delta > 0 ? "text-red-400" : "text-teal-400"
+                      }`}
                   >
                     {delta > 0 ? "▲" : "▼"} {Math.abs(pct)}% vs last month
                   </p>
@@ -297,9 +296,8 @@ const SpendingPrediction = () => {
                         </p>
                         {pct !== null && (
                           <p
-                            className={`text-xs ${
-                              delta > 0 ? "text-red-400" : "text-teal-400"
-                            }`}
+                            className={`text-xs ${delta > 0 ? "text-red-400" : "text-teal-400"
+                              }`}
                           >
                             {delta > 0 ? "▲" : "▼"} {Math.abs(pct)}% vs
                             last month ({fmt(actual)})

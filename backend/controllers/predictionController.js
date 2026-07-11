@@ -165,7 +165,7 @@ Rules:
 - If a category has only 1 month of data, set confidence to "low"`;
 
     // ── Call Gemini ───────────────────────────────────────────────────────────
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const result = await model.generateContent(prompt);
     const rawText = result.response.text().trim();
 
