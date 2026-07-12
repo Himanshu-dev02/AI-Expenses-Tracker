@@ -17,6 +17,8 @@ import {
   Loader2,
   RefreshCw,
   AlertCircle,
+  AlertTriangle,
+  Bell
 } from "lucide-react";
 import axios from "axios";
 
@@ -24,9 +26,9 @@ const BASE_URL = "http://localhost:4000";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 const fmt = (n) =>
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
     maximumFractionDigits: 0,
   }).format(n);
 
@@ -70,6 +72,20 @@ const SpendingPrediction = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [budget, setBudget] = useState(() => {
+  return Number(localStorage.getItem("monthlyBudget")) || 0;
+});
+const [editingBudget, setEditingBudget] = useState(false);
+const [budgetInput, setBudgetInput] = useState("");
+const saveBudget = () => {
+  const val = Number(budgetInput);
+  if (val > 0) {
+    setBudget(val);
+    localStorage.setItem("monthlyBudget", val);
+  }
+  setEditingBudget(false);
+  setBudgetInput("");
+};
 
   const fetchPrediction = async () => {
     setLoading(true);
@@ -143,6 +159,63 @@ const SpendingPrediction = () => {
           Refresh
         </button>
       </div>
+      {/* Overspending Alert */}
+{!loading && data && budget > 0 && data.predictedTotal > budget && (
+  <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+    <AlertTriangle size={20} className="text-red-400 shrink-0 mt-0.5" />
+    <div>
+      <p className="text-sm font-semibold text-red-400">Overspending Alert</p>
+      <p className="text-sm text-red-300 mt-0.5">
+        At current spending, you may exceed your monthly budget by{" "}
+        <span className="font-bold">{fmt(data.predictedTotal - budget)}</span>{" "}
+        this {data.nextMonth}.
+      </p>
+    </div>
+    <Bell size={16} className="text-red-400 shrink-0 ml-auto mt-0.5" />
+  </div>
+)}
+
+{/* Safe Banner */}
+{!loading && data && budget > 0 && data.predictedTotal <= budget && (
+  <div className="flex items-center gap-3 p-4 rounded-xl bg-teal-500/10 border border-teal-500/20">
+    <AlertCircle size={18} className="text-teal-400" />
+    <p className="text-sm text-teal-300">
+      You're on track —{" "}
+      <span className="font-bold">{fmt(budget - data.predictedTotal)}</span>{" "}
+      under your {fmt(budget)} budget.
+    </p>
+  </div>
+)}
+
+{/* Budget Setter Button */}
+<div className="flex items-center gap-3">
+  {editingBudget ? (
+    <>
+      <input
+        type="number"
+        value={budgetInput}
+        onChange={(e) => setBudgetInput(e.target.value)}
+        placeholder="Enter monthly budget"
+        className="flex-1 rounded-lg bg-white/5 border border-black-50 px-3 py-2 text-sm text-black-300 placeholder-gray-500 focus:outline-none focus:border-teal-500"
+        autoFocus
+      />
+      <button onClick={saveBudget}
+        className="px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium transition">
+        Save
+      </button>
+      <button onClick={() => setEditingBudget(false)}
+        className="px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 text-sm transition">
+        Cancel
+      </button>
+    </>
+  ) : (
+    <button onClick={() => { setEditingBudget(true); setBudgetInput(budget || ""); }}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-100 hover:bg-gray-100 text-sm text-black-300 transition">
+      <Bell size={14} />
+      {budget > 0 ? `Budget: ${fmt(budget)} · Edit` : "Set Monthly Budget"}
+    </button>
+  )}
+</div>
 
       {/* Loading */}
       {loading && (

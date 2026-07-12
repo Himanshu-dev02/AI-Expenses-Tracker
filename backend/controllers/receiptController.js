@@ -6,7 +6,7 @@ import { createWorker } from "tesseract.js";
 import expenseModel from "../models/expenseModel.js";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 
 const cleanupTempFile = async (filePath) => {
   if (!filePath || !fs.existsSync(filePath)) return;
