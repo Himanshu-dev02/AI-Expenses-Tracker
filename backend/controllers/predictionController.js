@@ -203,7 +203,7 @@ Rules:
     return res.status(500).json({
       success: false,
       message: "Failed to generate prediction",
-      error: error.message,
+      error: error.message,                         
     });
   }
 };

@@ -211,8 +211,7 @@ JWT_EXPIRE=7d
 NODE_ENV=development
 EOF
 
-# Start the development server
-npm run dev
+ 
 ```
 
 ✅ Backend running at `http://localhost:4000`
@@ -261,15 +260,7 @@ JWT_EXPIRE=7d
 CORS_ORIGIN=http://localhost:5173
 ```
 
-#### 2. Install & Run
-
-```bash
-cd backend
-npm install
-npm run dev      # Development with hot reload
-npm start        # Production mode
-```
-
+ 
  
 
 
@@ -348,18 +339,7 @@ VITE_APP_NAME=AI Expenses Tracker
  
 
  
-### 4. Debugging
-
-**Frontend:**
-- Open DevTools: `F12` or `Ctrl+Shift+I`
-- Check Console tab for errors
-- Use React DevTools extension
-
-**Backend:**
-- Check terminal logs
-- Use VS Code debugger
-- Add console.log statements
-
+ 
 ---
 
 ## 🖼️ Screenshots
@@ -384,70 +364,7 @@ VITE_APP_NAME=AI Expenses Tracker
 [Time-series charts and financial analytics]
 ```
 
----
-
-## 🐛 Troubleshooting
-
-### Frontend Issues
-
-#### Port 5173 Already in Use
-```bash
-# Use a different port
-npm run dev -- --port 3000
-```
-
-#### Dependencies Installation Fails
-```bash
-# Clear cache and reinstall
-rm -rf node_modules package-lock.json
-npm cache clean --force
-npm install
-```
-
-#### API Calls Return 404
-- ✅ Ensure backend is running on port 4000
-- ✅ Check CORS configuration
-- ✅ Verify API endpoint URLs in code
-
-#### 401 Unauthorized Errors
-- ✅ Verify JWT token in localStorage
-- ✅ Check token hasn't expired
-- ✅ Re-login if necessary
-
-### Backend Issues
-
-#### MongoDB Connection Failed
-```bash
-# Ensure MongoDB is running
-mongod
-
-# Check connection string in .env
-MONGODB_URI=mongodb://localhost:27017/expenses-tracker
-```
-
-#### Port 4000 Already in Use
-```bash
-# Kill process on port 4000
-# Linux/Mac:
-lsof -i :4000
-kill -9 <PID>
-
-# Windows:
-netstat -ano | findstr :4000
-taskkill /PID <PID> /F
-```
-
-#### CORS Errors
-- ✅ Enable CORS in `server.js`
-- ✅ Whitelist frontend URL
-- ✅ Check CORS_ORIGIN in .env
-
-#### JWT Token Issues
-- ✅ Verify JWT_SECRET is set
-- ✅ Check token format (Bearer <token>)
-- ✅ Verify token hasn't expired
-
----
+ 
  
  
 
@@ -545,19 +462,7 @@ This project uses:
 - **ESLint** for JavaScript linting
 - **Prettier** for code formatting (recommended)
 
-### Running Linter
-
-```bash
-# Frontend
-cd frontend
-npm run lint
-
-# Backend (if configured)
-cd backend
-npm run lint
-```
-
----
+ 
 
 ## 🔒 Security
 
