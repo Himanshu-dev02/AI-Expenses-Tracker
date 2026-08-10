@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { navbarStyles} from "../assets/dummyStyles";
+import { navbarStyles } from "../assets/dummyStyles";
 import img1 from '../assets/hero.png';
 import { ChevronDown, LogOut, User } from 'lucide-react';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const BASE_URL =  "http://localhost:4000/api";
+const BASE_URL = "http://localhost:4000/api";
 
 const Navbar = ({ user: propUser, onLogout }) => {
     const navigate = useNavigate();
-    const menuRef = useRef( );
+    const menuRef = useRef();
     const [menuOpen, setMenuOpen] = useState(false);
     const [user, setUser] = useState(
         propUser || {
@@ -34,8 +34,8 @@ const Navbar = ({ user: propUser, onLogout }) => {
                         Authorization: `Bearer ${token}`
                     },
                 });
-               const userData = response.data.user || response.data;
-               setUser(userData);
+                const userData = response.data.user || response.data;
+                setUser(userData);
             }
             catch (error) {
             }
@@ -50,59 +50,60 @@ const Navbar = ({ user: propUser, onLogout }) => {
     const handleLogout = () => {
         setMenuOpen(false);
         localStorage.removeItem("token");
-         onLogout?.();
-        navigate("/login");
+        sessionStorage.removeItem("token");
+        onLogout?.();
+        navigate("/");
     };
- // close the menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    };
-    
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    // close the menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setMenuOpen(false);
+            }
+        };
 
-  
-  return (
-    <header className={navbarStyles.header}>
-      <div className={navbarStyles.container}> 
-        {/* logo */}
-        <div onClick={() => navigate("/")} className={navbarStyles.logoContainer}>
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
-      <div className={navbarStyles.logoImage}>
-        <img src={img1} alt="logo"/>
-        </div>
-       <span className={navbarStyles.logoText}>Expense Tracker</span>
-        </div>
-        {/*if the user is present */}
-        {user &&(
-            <div className={navbarStyles.userContainer} ref={menuRef}>
-                <button onClick={toggleMenu} className={navbarStyles.userButton}>
-                    <div className="relative">
-                    <div className={navbarStyles.userAvatar}>
-                        {user?.name?.[0]?.toUpperCase() || "U"}
-                        </div>
-                        <div className={navbarStyles.statusIndicator}></div>
-                         </div>
-                        <div className={navbarStyles.userTextContainer}>
-                            <p className = {navbarStyles.userName}>{user?.name ||"User"}</p>
-                            <p className={navbarStyles.userEmail}>{user?.email || "user@expensetracker.com"}</p>
 
-                       
+    return (
+        <header className={navbarStyles.header}>
+            <div className={navbarStyles.container}>
+                {/* logo */}
+                <div   className={navbarStyles.logoContainer}>
 
-                        </div>
-                        <ChevronDown  className={navbarStyles.chevronIcon(menuOpen)}/>
+                    <div className={navbarStyles.logoImage}>
+                        <img src={img1} alt="logo" />
+                    </div>
+                    <span className={navbarStyles.logoText}>TrackAI</span>
+                </div>
+                {/*if the user is present */}
+                {user && (
+                    <div className={navbarStyles.userContainer} ref={menuRef}>
+                        <button onClick={toggleMenu} className={navbarStyles.userButton}>
+                            <div className="relative">
+                                <div className={navbarStyles.userAvatar}>
+                                    {user?.name?.[0]?.toUpperCase() || "U"}
+                                </div>
+                                <div className={navbarStyles.statusIndicator}></div>
+                            </div>
+                            <div className={navbarStyles.userTextContainer}>
+                                <p className={navbarStyles.userName}>{user?.name || "User"}</p>
+                                <p className={navbarStyles.userEmail}>{user?.email || "user@expensetracker.com"}</p>
+
+
+
+                            </div>
+                            <ChevronDown className={navbarStyles.chevronIcon(menuOpen)} />
                         </button>
                         {/* dropdown menu */}
                         {menuOpen && (
                             <div className={navbarStyles.dropdownMenu}>
                                 <div className={navbarStyles.dropdownHeader}>
-                                <div className="flex items-center gap-3">
-                                    <div className ={navbarStyles.dropdownAvatar}>
-                                        {user?.name?.[0]?.toUpperCase() || "U"}
+                                    <div className="flex items-center gap-3">
+                                        <div className={navbarStyles.dropdownAvatar}>
+                                            {user?.name?.[0]?.toUpperCase() || "U"}
                                         </div>
                                         <div>
                                             <div className={navbarStyles.dropdownName}>{user?.name || "User"}</div>
@@ -111,29 +112,29 @@ const Navbar = ({ user: propUser, onLogout }) => {
                                     </div>
                                 </div>
                                 <div className={navbarStyles.menuItem}>
-                                    <button 
-                                    onClick={() => {
-                                        setMenuOpen(false);
-                                        navigate("/profile");
-                                    }} className={navbarStyles.menuItem}>
-                                        <User className =" w-4 h-4"/>
+                                    <button
+                                        onClick={() => {
+                                            setMenuOpen(false);
+                                            navigate("/profile");
+                                        }} className={navbarStyles.menuItem}>
+                                        <User className=" w-4 h-4" />
                                         <span>My profile</span>
 
                                     </button>
-                             </div>
-                             <div className={navbarStyles.menuItemBorder}>
-                                <button onClick={handleLogout} className={navbarStyles.logoutButton} >
-                                    <LogOut className="w-4 h-4"/>
-                                    <span>Logout</span>
-                                </button>
                                 </div>
-                             </div>
-                             )}
+                                <div className={navbarStyles.menuItemBorder}>
+                                    <button onClick={handleLogout} className={navbarStyles.logoutButton} >
+                                        <LogOut className="w-4 h-4" />
+                                        <span>Logout</span>
+                                    </button>
+                                </div>
                             </div>
                         )}
-        </div>
+                    </div>
+                )}
+            </div>
         </header>
-  );
+    );
 };
 
 export default Navbar;

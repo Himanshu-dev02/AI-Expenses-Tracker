@@ -1,23 +1,22 @@
 import React from 'react'
 
 const FinancialCard = ({
-    icon, 
+    icon,
     label,
     value,
     additionalContent,
-    borderColor = "", 
-   bgColor="bg-white"
-}) =>  (
+    borderColor = "",
+    bgColor = "bg-[#0A1628]"
+}) => (
     <div
-    className={`${bgColor} rounded-xl p-5 lg:-mx-2 lg:p-2 shadow-sm
-    border hover:shadow-md border-gray-100 transation-all ${borderColor}`}>
-     <div className="text-sm font-medium text-gray-600 flex items-center gap-2">
-        {icon}
-        {label}
-
-     </div>
-     <p className="text-2xl font-bold text-gray-800 mt-1">{value}</p>
-     {additionalContent}
+        className={`${bgColor} rounded-2xl p-5 lg:p-4 shadow-xl
+    border border-white/10 hover:border-white/20 transition-all ${borderColor}`}>
+        <div className="text-sm font-medium text-slate-400 flex items-center gap-2">
+            {icon}
+            {label}
+        </div>
+        <p className="text-2xl font-extrabold text-white mt-1.5">{value}</p>
+        {additionalContent}
     </div>
 );
 

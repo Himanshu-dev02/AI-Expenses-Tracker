@@ -191,7 +191,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
       });
       toast.success("password change succeessfully!");
       setShowPasswordModal(false);
-      setPasswordData({ current: "",  new: "", confirm: "" });
+      setPasswordData({ current: "", new: "", confirm: "" });
       setPasswordErrors({});
 
       // reset password visibility
@@ -203,7 +203,7 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
 
   const handleLogout = useCallback(() => {
     onLogout?.();
-    navigate("/signup");
+    navigate("/");
   }, [onLogout, navigate]);
 
   const closePasswordModal = useCallback(() => {
@@ -294,12 +294,12 @@ const Profile = ({ user: initialUser, onUpdateProfile, onLogout }) => {
                 <div className="space-y-4">
                   <div>
                     <p className={profileStyles.label}>Full Name</p>
-                    <p className="font-medium text-gray-800">{user.name}</p>
+                    <p className="font-medium text-white">{user.name}</p>
                   </div>
 
                   <div>
                     <p className={profileStyles.label}>Email Address</p>
-                    <p className="font-medium text-gray-800">{user.email}</p>
+                    <p className="font-medium text-white">{user.email}</p>
                   </div>
 
                 </div>

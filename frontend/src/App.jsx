@@ -3,11 +3,12 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Login from "./components/Login";
-import Signup from "./components/signup";
+import Signup from "./components/Signup";
 import axios from "axios";
 import Income from "./pages/Income";
 import Expense from "./pages/Expense";
 import Profile from "./pages/Profile";
+import LandingPage from "./pages/landingpage";
 
 
 const API_URL = "http://localhost:4000";
@@ -25,7 +26,7 @@ const ProtectedRoute = ({ user, children }) => {
   const hasToken = localToken || sessionToken;
 
   if (!user || !hasToken) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
@@ -165,17 +166,17 @@ const App = () => {
 
   const handleLogin = (userData, remember = false, tokenFromApi = null) => {
     persistAuth(userData, tokenFromApi, remember);
-    navigate("/");
+    navigate("/dashboard");
   };
 
   const handleSignup = (userData, remember = false, tokenFromApi = null) => {
     persistAuth(userData, tokenFromApi, remember);
-    navigate("/");
+    navigate("/dashboard");
   };
 
   const handleLogout = () => {
     clearAuth();
-    navigate("/login");
+    navigate("/");
   };
 
 
@@ -210,11 +211,12 @@ const App = () => {
 
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/Signup" element={<Signup onSignup={handleSignup} />} />
+        <Route path="/" element={<LandingPage onAuthSuccess={(userData, token, remember) => { persistAuth(userData, token, remember); navigate("/dashboard"); }} />} />
         <Route element={<ProtectedRoute user={user} >
           <Layout user={user} onLogout={handleLogout} />
         </ProtectedRoute>}>
           <Route
-            path="/"
+            path="/dashboard"
             element={
               <Dashboard
                 transaction={transaction}
@@ -254,7 +256,7 @@ const App = () => {
         </Route>
         <Route
           path="*"
-          element={<Navigate to={user ? "/" : "/login"} replace />} />
+          element={<Navigate to={user ? "/dashboard" : "/"} replace />} />
       </Routes>
     </>
   )

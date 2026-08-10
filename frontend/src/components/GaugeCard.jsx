@@ -1,5 +1,5 @@
 import React from "react";
-import { 
+import {
   ResponsiveContainer,
   RadialBarChart,
   RadialBar,
@@ -15,26 +15,26 @@ const GaugeCard = ({
   const { name = "Metric", value = 0, max = 100 } = gauge;
   const isNegative = value < 0;
   const absValue = Math.abs(value);
-  
+
   // For negative values, we'll show the absolute value in the chart but indicate it's negative in text
   const chartValue = isNegative ? absValue : value;
   const percentage = Math.min((absValue / max) * 100, 100);
 
   // Determine colors based on whether value is negative
-  const gradientStart = isNegative ? '#ef4444' : (colorInfo.gradientStart || '#00C49F');
-  const gradientEnd = isNegative ? '#dc2626' : (colorInfo.gradientEnd || '#0088FE');
-  const textColor = isNegative ? 'text-red-600' : (colorInfo.text || 'text-gray-800');
-  const percentColor = isNegative ? 'text-red-500' : 'text-gray-500';
+  const gradientStart = isNegative ? '#ef4444' : (colorInfo.gradientStart || '#5B6EF5');
+  const gradientEnd = isNegative ? '#dc2626' : (colorInfo.gradientEnd || '#A78BFA');
+  const textColor = isNegative ? 'text-rose-400' : (colorInfo.text || 'text-white');
+  const percentColor = isNegative ? 'text-rose-400' : 'text-slate-400';
 
   return (
-    <div className="bg-white rounded-xl p-5 -mx-3 lg:-mx-0 md:-mx-5 shadow-sm flex flex-col items-center border border-gray-100">
-      <h3 className={`text-lg font-semibold mb-4 ${textColor}`}>
+    <div className="bg-[#0A1628] rounded-2xl p-5 -mx-3 lg:-mx-0 md:-mx-5 shadow-xl flex flex-col items-center border border-white/10">
+      <h3 className={`text-lg font-semibold mb-4 text-white`}>
         {name}
       </h3>
       <div className="w-full h-48">
         <ResponsiveContainer>
           <RadialBarChart
-            data={[{...gauge, value: chartValue}]}
+            data={[{ ...gauge, value: chartValue }]}
             cx="50%"
             cy="40%"
             startAngle={180}
@@ -52,27 +52,27 @@ const GaugeCard = ({
 
             <RadialBar
               minAngle={15}
-              background={{ fill: '#f3f4f6' }}
+              background={{ fill: 'rgba(255,255,255,0.08)' }}
               dataKey="value"
               cornerRadius="50%"
               fill={`url(#${name}Gradient)`}
             />
 
-            <text 
-              x="50%" 
-              y="50%" 
-              textAnchor="middle" 
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
               dominantBaseline="middle"
-              className={`text-2xl font-bold ${textColor}`}
+              className={`text-2xl font-bold fill-white`}
             >
               {isNegative ? '-' : ''}${Math.round(absValue).toLocaleString()}
             </text>
-            <text 
-              x="50%" 
-              y="65%" 
-              textAnchor="middle" 
+            <text
+              x="50%"
+              y="65%"
+              textAnchor="middle"
               dominantBaseline="middle"
-              className={`text-sm ${percentColor}`}
+              className={`text-sm fill-slate-400`}
             >
               {Math.round(percentage)}%
             </text>
@@ -88,11 +88,11 @@ const GaugeCard = ({
       </div>
       <div className="text-center mt-3">
         {isNegative && highlightNegative && (
-          <p className="text-sm text-red-600 font-semibold mb-1">
+          <p className="text-sm text-rose-400 font-semibold mb-1">
             Negative savings
           </p>
         )}
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-400">
           {timeFrameLabel} data
         </p>
       </div>

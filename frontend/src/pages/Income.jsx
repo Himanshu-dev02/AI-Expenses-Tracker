@@ -86,19 +86,19 @@ const IncomeChart = ({ chartData, timeFrame, timeFrameRange }) => (
           </defs>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="#f3f4f6"
+            stroke="rgba(255,255,255,0.08)"
             vertical={false}
           />
           <XAxis
             dataKey="label"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: "#6b7280", fontSize: 12 }}
+            tick={{ fill: "#9ca3af", fontSize: 12 }}
           />
           <YAxis
             axisLine={false}
             tickLine={false}
-            tick={{ fill: "#6b7280", fontSize: 12 }}
+            tick={{ fill: "#9ca3af", fontSize: 12 }}
             width={50}
             tickFormatter={(value) => `$${value.toLocaleString()}`}
           />

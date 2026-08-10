@@ -478,12 +478,12 @@ const ExpensePage = () => {
                   <stop offset="95%" stopColor="#ff9800" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
-              <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "#6b7280", fontSize: 12 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
+              <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#6b7280", fontSize: 12 }}
+                tick={{ fill: "#9ca3af", fontSize: 12 }}
                 width={60}
                 tickFormatter={(value) => `$${value.toLocaleString()}`}
               />
