@@ -368,26 +368,13 @@ VITE_APP_NAME=AI Expenses Tracker
  
  
 
-### Deploy Frontend to Vercel
-
-```bash
-npm install -g vercel
-vercel
-```
-
+ 
  
 
  
 
-## 📚 Documentation
-
-### Entity Relationships
-
-```
-User (1) ──→ (Many) Expense
-User (1) ──→ (Many) Income
-User (1) ──→ (Many) Receipt
-```
+ 
+ 
 
 ### Authentication Flow
 
