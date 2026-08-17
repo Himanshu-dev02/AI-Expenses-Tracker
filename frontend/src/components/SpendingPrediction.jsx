@@ -67,9 +67,38 @@ const ConfidenceDot = ({ confidence }) => {
   );
 };
 
+const getToken = () => localStorage.getItem("token") || sessionStorage.getItem("token");
+
+const getCachedPrediction = () => {
+  try {
+    const raw = sessionStorage.getItem("spendingPrediction");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    const currentToken = getToken();
+    if (parsed && parsed.token === currentToken && parsed.data) {
+      return parsed.data;
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const setCachedPrediction = (data) => {
+  try {
+    const currentToken = getToken();
+    sessionStorage.setItem(
+      "spendingPrediction",
+      JSON.stringify({ token: currentToken, data })
+    );
+  } catch (e) {
+    console.error("Failed to cache spending prediction", e);
+  }
+};
+
 // ── Main Component ─────────────────────────────────────────────────────────
 const SpendingPrediction = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(() => getCachedPrediction());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [budget, setBudget] = useState(() => {
@@ -87,11 +116,14 @@ const SpendingPrediction = () => {
     setBudgetInput("");
   };
 
-  const fetchPrediction = async () => {
+  const fetchPrediction = async (force = false) => {
+    if (!force && getCachedPrediction()) {
+      return;
+    }
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      const token = getToken();
       const { data: res } = await axios.get(
         `${BASE_URL}/api/prediction/next-month`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -102,6 +134,7 @@ const SpendingPrediction = () => {
         return;
       }
       setData(res);
+      setCachedPrediction(res);
     } catch (err) {
       setError(
         err.response?.data?.message || "Failed to load predictions"
@@ -112,7 +145,9 @@ const SpendingPrediction = () => {
   };
 
   useEffect(() => {
-    fetchPrediction();
+    if (!getCachedPrediction()) {
+      fetchPrediction();
+    }
   }, []);
 
   // ── Build chart data ─────────────────────────────────────────────────────
@@ -151,7 +186,7 @@ const SpendingPrediction = () => {
           )}
         </div>
         <button
-          onClick={fetchPrediction}
+          onClick={() => fetchPrediction(true)}
           disabled={loading}
           className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 disabled:opacity-50 transition"
         >

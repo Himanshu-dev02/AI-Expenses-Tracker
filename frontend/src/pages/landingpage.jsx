@@ -356,7 +356,7 @@ export default function LandingPage({ onAuthSuccess }) {
           {/* Nav links desktop */}
           <div className="hide-mobile" style={{ display: "flex", gap: 32, flex: 1 }}>
             {navLinks.map(l => (
-              <button key={l} className="nav-link" onClick={() => scrollTo(l.toLowerCase().replace(" ", "-"))} style={{ background: "none", border: "none", fontSize: 14, fontWeight: 500, color: S.textMuted, padding: 0 }}>{l}</button>
+              <button key={l} className="nav-link" onClick={() => scrollTo(l.toLowerCase().replaceAll(" ", "-"))} style={{ background: "none", border: "none", fontSize: 14, fontWeight: 500, color: S.textMuted, padding: 0 }}>{l}</button>
             ))}
           </div>
 
@@ -375,7 +375,7 @@ export default function LandingPage({ onAuthSuccess }) {
         {/* Mobile menu */}
         {menuOpen && (
           <div style={{ background: "rgba(5,14,31,0.98)", borderTop: `1px solid ${S.border}`, padding: "16px 24px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
-            {navLinks.map(l => <button key={l} onClick={() => scrollTo(l.toLowerCase().replace(" ", "-"))} style={{ background: "none", border: "none", color: "#fff", fontSize: 15, fontWeight: 500, textAlign: "left" }}>{l}</button>)}
+            {navLinks.map(l => <button key={l} onClick={() => scrollTo(l.toLowerCase().replaceAll(" ", "-"))} style={{ background: "none", border: "none", color: "#fff", fontSize: 15, fontWeight: 500, textAlign: "left" }}>{l}</button>)}
             <button className="cta-primary" onClick={() => { setModal("signup"); setMenuOpen(false); }} style={{ padding: "11px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", fontSize: 14, fontWeight: 600, color: "#fff", marginTop: 8 }}>Get Started Free</button>
           </div>
         )}
@@ -410,10 +410,10 @@ export default function LandingPage({ onAuthSuccess }) {
                 </button>
               </div>
               {/* Social proof */}
-               
-                
-                 
-              
+
+
+
+
             </div>
             {/* Right — live mockup */}
             <div style={{ flex: 1, animation: "float 5s ease-in-out infinite" }}>
@@ -423,7 +423,7 @@ export default function LandingPage({ onAuthSuccess }) {
         </div>
       </section>
 
-      
+
 
       {/* ══════════════════ FEATURES ══════════════════ */}
       <section id="features" style={{ padding: "100px 24px" }}>

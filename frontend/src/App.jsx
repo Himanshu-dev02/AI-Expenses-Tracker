@@ -78,6 +78,7 @@ const App = () => {
       localStorage.removeItem("token");
       sessionStorage.removeItem("user");
       sessionStorage.removeItem("token");
+      sessionStorage.removeItem("spendingPrediction");
     } catch (error) {
       console.error("Error clearing auth data:", error);
 
