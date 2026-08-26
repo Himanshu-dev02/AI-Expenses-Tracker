@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { navbarStyles } from "../assets/dummyStyles";
-import img1 from '../assets/hero.png';
-import { ChevronDown, LogOut, User } from 'lucide-react';
+import { ChevronDown, LogOut, User, Wallet } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:4000/api";
+const BASE_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com/api";
 
 const Navbar = ({ user: propUser, onLogout }) => {
     const navigate = useNavigate();
@@ -71,10 +70,9 @@ const Navbar = ({ user: propUser, onLogout }) => {
         <header className={navbarStyles.header}>
             <div className={navbarStyles.container}>
                 {/* logo */}
-                <div   className={navbarStyles.logoContainer}>
-
+                <div onClick={() => navigate("/dashboard")} className={navbarStyles.logoContainer}>
                     <div className={navbarStyles.logoImage}>
-                        <img src={img1} alt="logo" />
+                        <Wallet size={18} className="text-white" />
                     </div>
                     <span className={navbarStyles.logoText}>TrackAI</span>
                 </div>

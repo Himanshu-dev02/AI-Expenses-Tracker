@@ -374,9 +374,9 @@ export const loginStyles = {
 export const navbarStyles = {
   header: "sticky top-0 z-50 bg-[#050E1F]/90 backdrop-blur-md border-b border-white/10 text-white shadow-lg",
   container: "flex items-center justify-between px-4 py-3 md:px-8 max-w-7xl mx-auto",
-  logoContainer: "flex items-center gap-3 cursor-pointer",
-  logoImage: "w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-[#5B6EF5] to-[#A78BFA] p-0.5 flex items-center justify-center",
-  logoText: "lg:text-2xl md:text-2xl text-xl text-white font-extrabold tracking-tight font-sans",
+  logoContainer: "flex items-center gap-2.5 cursor-pointer select-none group",
+  logoImage: "w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-[#5B6EF5] to-[#A78BFA] flex items-center justify-center shrink-0 shadow-md aspect-square transition-transform group-hover:scale-105",
+  logoText: "text-lg md:text-xl font-extrabold text-white tracking-tight font-sans leading-none flex items-center",
   userContainer: "relative",
   userButton: "flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10",
   userAvatar: "w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#5B6EF5] to-[#A78BFA] text-white font-bold text-base shadow-md",

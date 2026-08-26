@@ -3,7 +3,7 @@ import { Camera, Upload, X, Loader2, Check, RotateCcw } from "lucide-react";
 import { modalStyles } from "../assets/dummyStyles";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:4000/api";
+const API_BASE_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com/api";
 
 const ReceiptScanner = ({ showScanner, setShowScanner, onConfirm, color = "teal" }) => {
   const [imageFile, setImageFile] = useState(null);

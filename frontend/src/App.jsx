@@ -11,7 +11,7 @@ import Profile from "./pages/Profile";
 import LandingPage from "./pages/landingpage";
 
 
-const API_URL = "http://localhost:4000";
+const API_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com";
 
 // to get transaction from localstorage
 const getTransactionsFromStorage = () => {

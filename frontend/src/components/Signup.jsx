@@ -5,7 +5,7 @@ import axios from "axios";
 import { ArrowLeft, EyeOff, Eye, Lock, Mail, User } from 'lucide-react';
  
 
-const Signup = ({ API_URL = "http://localhost:4000", onSignup}) => {
+const Signup = ({ API_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com", onSignup}) => {
 
     const [name, setName] = useState("") ;
     const [email, setEmail] = useState("");

@@ -7,7 +7,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 
 
-const API_BASE = "http://localhost:4000/api";
+const API_BASE = "https://ai-expenses-tracker-backend-3u7r.onrender.com/api";
 
 Modal.setAppElement('#root');
 // Move PasswordInput component outside of ProfilePage to prevent recreation on every render

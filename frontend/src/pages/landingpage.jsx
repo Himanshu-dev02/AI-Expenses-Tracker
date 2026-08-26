@@ -81,7 +81,7 @@ function DashboardMockup() {
               </div>
             </div>
             <div style={{ background: "rgba(16,201,134,0.1)", border: "1px solid rgba(16,201,134,0.3)", borderRadius: 10, padding: "10px 14px", fontSize: 12, color: "#10C986" }}>
-              ✓ Gemini extracted all fields with high confidence
+              ✓ AI extracted all fields with high confidence
             </div>
           </div>
         )}
@@ -119,7 +119,7 @@ function DashboardMockup() {
 }
 
 /* ─── Auth Modal ─── */
-const API_URL = "http://localhost:4000";
+const API_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com";
 
 function AuthModal({ mode, onClose, onSuccess }) {
   const [tab, setTab] = useState(mode); // "login" | "signup"
@@ -179,9 +179,11 @@ function AuthModal({ mode, onClose, onSuccess }) {
         <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.07)", border: "none", borderRadius: 8, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={16} /></button>
 
         {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", display: "flex", alignItems: "center", justifyContent: "center" }}><Wallet size={18} color="#fff" /></div>
-          <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 18 }}>TrackAI</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28, userSelect: "none" }}>
+          <div style={{ width: 36, height: 36, aspectRatio: "1/1", borderRadius: 10, background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(91,110,245,0.3)" }}>
+            <Wallet size={18} color="#fff" />
+          </div>
+          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, lineHeight: 1, letterSpacing: "-0.3px" }}>TrackAI</span>
         </div>
 
         {/* Tabs */}
@@ -346,11 +348,11 @@ export default function LandingPage({ onAuthSuccess }) {
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, transition: "all 0.3s", background: scrolled ? "rgba(5,14,31,0.92)" : "transparent", backdropFilter: scrolled ? "blur(20px)" : "none", borderBottom: scrolled ? `1px solid ${S.border}` : "none", padding: "0 24px" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", alignItems: "center", height: 68, gap: 32 }}>
           {/* Logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0, cursor: "pointer", userSelect: "none" }}>
+            <div style={{ width: 36, height: 36, aspectRatio: "1/1", borderRadius: 10, background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(91,110,245,0.3)" }}>
               <Wallet size={18} color="#fff" />
             </div>
-            <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: "-0.3px" }}>TrackAI</span>
+            <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, lineHeight: 1, letterSpacing: "-0.3px" }}>TrackAI</span>
           </div>
 
           {/* Nav links desktop */}
@@ -393,7 +395,7 @@ export default function LandingPage({ onAuthSuccess }) {
             <div style={{ flex: 1 }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, border: `1px solid rgba(91,110,245,0.4)`, background: "rgba(91,110,245,0.1)", marginBottom: 24, fontSize: 13, fontWeight: 500, color: S.indigo }}>
                 <Sparkles size={13} />
-                Powered by Gemini AI
+                Track Expenses Smartly
               </div>
               <h1 className="hero-title gradient-text" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(2.6rem,5vw,4rem)", lineHeight: 1.1, letterSpacing: "-1.5px", marginBottom: 24 }}>
                 Your Money,<br />Managed by AI
@@ -432,7 +434,7 @@ export default function LandingPage({ onAuthSuccess }) {
             <div style={{ textAlign: "center", marginBottom: 64 }}>
               <div style={{ display: "inline-block", padding: "5px 14px", borderRadius: 100, background: "rgba(16,201,134,0.1)", border: "1px solid rgba(16,201,134,0.3)", fontSize: 12, fontWeight: 600, color: S.emerald, marginBottom: 16, letterSpacing: "0.5px", textTransform: "uppercase" }}>Features</div>
               <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.8rem)", letterSpacing: "-1px", marginBottom: 16 }}>Everything you need to <span className="gradient-text">master your finances</span></h2>
-              <p style={{ color: S.textMuted, fontSize: 16, maxWidth: 520, margin: "0 auto" }}>From manual tracking to AI-powered automation — built for students and developers who want to showcase real skills.</p>
+              <p style={{ color: S.textMuted, fontSize: 16, maxWidth: 520, margin: "0 auto" }}></p>
             </div>
           </FadeIn>
           <div className="features-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
@@ -462,19 +464,19 @@ export default function LandingPage({ onAuthSuccess }) {
           <FadeIn>
             <div style={{ textAlign: "center", marginBottom: 64 }}>
               <div style={{ display: "inline-block", padding: "5px 14px", borderRadius: 100, background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.3)", fontSize: 12, fontWeight: 600, color: S.purple, marginBottom: 16, letterSpacing: "0.5px", textTransform: "uppercase" }}>AI Features</div>
-              <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.8rem)", letterSpacing: "-1px", marginBottom: 16 }}>Two AI features that <span className="gradient-text">recruiters remember</span></h2>
+              <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem,4vw,2.8rem)", letterSpacing: "-1px", marginBottom: 16 }}>AI features that <span className="gradient-text"> help you track expenses smartly</span></h2>
             </div>
           </FadeIn>
           <div className="ai-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24 }}>
             {[
               {
-                badge: "Vision AI", badgeColor: "#5B6EF5", icon: <Receipt size={28} color="#5B6EF5" />,
-                title: "Receipt Scanner", tag: "Gemini Vision API",
+                badge: "Receipt Scanner AI", badgeColor: "#5B6EF5", icon: <Receipt size={28} color="#5B6EF5" />,
+                title: "Receipt Scanner",
                 points: ["Camera or gallery upload", "Extracts 5 fields instantly", "Editable before saving", "Handles blurry photos"],
               },
               {
                 badge: "Prediction AI", badgeColor: "#A78BFA", icon: <Brain size={28} color="#A78BFA" />,
-                title: "Spend Predictor", tag: "Gemini Text API + MongoDB",
+                title: "Spend Predictor",
                 points: ["6-month historical analysis", "Per-category forecasts", "Trend + confidence score", "Budget breach alert"],
                 featured: true,
               },
@@ -482,7 +484,7 @@ export default function LandingPage({ onAuthSuccess }) {
             ].map(({ badge, badgeColor, icon, title, tag, points, featured }, i) => (
               <FadeIn key={title} delay={i * 0.1}>
                 <div style={{ borderRadius: 20, border: `1px solid ${featured ? badgeColor + "50" : S.border}`, background: featured ? `linear-gradient(145deg, rgba(167,139,250,0.08), rgba(91,110,245,0.05))` : S.glass, padding: 32, position: "relative", height: "100%" }}>
-                  {featured && <div style={{ position: "absolute", top: -1, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", padding: "4px 16px", borderRadius: "0 0 10px 10px", fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap" }}>⭐ Most Impressive</div>}
+                  {featured && <div style={{ position: "absolute", top: -1, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", padding: "4px 16px", borderRadius: "0 0 10px 10px", fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap" }}></div>}
                   <div style={{ display: "inline-block", padding: "4px 12px", borderRadius: 100, background: `${badgeColor}18`, border: `1px solid ${badgeColor}40`, fontSize: 11, fontWeight: 600, color: badgeColor, marginBottom: 20 }}>{badge}</div>
                   <div style={{ marginBottom: 16 }}>{icon}</div>
                   <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22, marginBottom: 6 }}>{title}</h3>
@@ -532,9 +534,9 @@ export default function LandingPage({ onAuthSuccess }) {
           <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20, position: "relative" }}>
             {[
               { step: "01", icon: <Users size={22} color="#5B6EF5" />, title: "Create Account", desc: "Sign up with email and password. JWT tokens keep you secure across sessions." },
-              { step: "02", icon: <Upload size={22} color="#A78BFA" />, title: "Scan a Receipt", desc: "Upload any receipt photo. Gemini Vision reads it and fills the form instantly." },
+              { step: "02", icon: <Upload size={22} color="#A78BFA" />, title: "Scan a Receipt", desc: "Upload any receipt photo. AI reads it and fills the form instantly." },
 
-              { step: "04", icon: <TrendingUp size={22} color="#F59E0B" />, title: "See Predictions", desc: "AI forecasts next month's spend and alerts you before you overshoot." },
+              { step: "03", icon: <TrendingUp size={22} color="#F59E0B" />, title: "See Predictions", desc: "AI forecasts next month's spend and alerts you before you overshoot." },
             ].map(({ step, icon, title, desc }, i) => (
               <FadeIn key={step} delay={i * 0.1}>
                 <div style={{ textAlign: "center", padding: "32px 20px", borderRadius: 16, background: S.glass, border: `1px solid ${S.border}`, height: "100%" }}>
@@ -561,8 +563,7 @@ export default function LandingPage({ onAuthSuccess }) {
           <div className="benefits-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 20 }}>
             {[
               { icon: <Zap size={20} color="#F59E0B" />, color: "#F59E0B", title: "Zero Manual Entry", desc: "Receipt scanner . You spend less time on bookkeeping, more on living." },
-              { icon: <Brain size={20} color="#A78BFA" />, color: "#A78BFA", title: "Genuinely Predictive", desc: "Not just charts of the past — Gemini AI tells you where you're headed and exactly why, category by category." },
-              { icon: <Globe size={20} color="#10C986" />, color: "#10C986", title: "Full-Stack Portfolio Piece", desc: "React + Vite + Node.js + MongoDB + Gemini AI. Every layer a recruiter wants to see." },
+              { icon: <Brain size={20} color="#A78BFA" />, color: "#A78BFA", title: "Genuinely Predictive", desc: "Not just charts of the past —  AI tells you where you're headed and exactly why, category by category." },
               { icon: <Lock size={20} color="#5B6EF5" />, color: "#5B6EF5", title: "Production-Grade Security", desc: "JWT auth, bcrypt password hashing, OAuth 2.0 token refresh — security you can talk about in interviews." },
             ].map(({ icon, color, title, desc }, i) => (
               <FadeIn key={title} delay={i * 0.1}>
@@ -600,24 +601,17 @@ export default function LandingPage({ onAuthSuccess }) {
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <div className="footer-grid" style={{ display: "flex", justifyContent: "space-between", marginBottom: 48 }}>
             <div style={{ maxWidth: 280 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, userSelect: "none" }}>
+                <div style={{ width: 34, height: 34, aspectRatio: "1/1", borderRadius: 10, background: "linear-gradient(135deg,#5B6EF5,#A78BFA)", display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(91,110,245,0.2)" }}>
                   <Wallet size={16} color="#fff" />
                 </div>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 17 }}>TrackAI</span>
+                <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, lineHeight: 1, letterSpacing: "-0.3px" }}>TrackAI</span>
               </div>
-              <p style={{ color: S.textMuted, fontSize: 13, lineHeight: 1.7 }}>AI-powered expense tracking built with React, Node.js, MongoDB and Gemini API.</p>
-              <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-                {[<ExternalLink size={16} />, <ExternalLink size={16} />].map((icon, i) => (
-                  <button key={i} style={{ width: 36, height: 36, borderRadius: 8, background: S.glass, border: `1px solid ${S.border}`, display: "flex", alignItems: "center", justifyContent: "center", color: S.textMuted }}>
-                    {icon}
-                  </button>
-                ))}
-              </div>
+              <p style={{ color: S.textMuted, fontSize: 13, lineHeight: 1.7 }}>AI-powered expense tracking</p>
+              
             </div>
             {[
               { title: "Features", links: ["Receipt Scanner", "Spend Predictor", "Overspending Alert"] },
-              { title: "Tech Stack", links: ["React + Vite", "Node.js + Express", "MongoDB", "Gemini AI"] },
               { title: "Project", links: ["GitHub Repo", "Documentation", "Portfolio", "Contact"] },
             ].map(({ title, links }) => (
               <div key={title}>
@@ -629,8 +623,8 @@ export default function LandingPage({ onAuthSuccess }) {
             ))}
           </div>
           <div style={{ borderTop: `1px solid ${S.border}`, paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <span style={{ fontSize: 13, color: S.textMuted }}>© 2026 TrackAI. Built for portfolio & internships.</span>
-            <span style={{ fontSize: 13, color: S.textMuted }}>Made with ❤️ using React + Gemini AI</span>
+            <span style={{ fontSize: 13, color: S.textMuted }}>©2026 TrackAI. All rights reserved. </span>
+            <span style={{ fontSize: 13, color: S.textMuted }}>Made with ❤️</span>
           </div>
         </div>
       </footer>

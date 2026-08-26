@@ -7,8 +7,8 @@ import Sidebar from "./Sidebar";
 import { ArrowUp, ArrowDown, Activity, Car, CreditCard, DollarSign, Gift, Home, PiggyBank, ShoppingCart, TrendingUp, Utensils, Zap, RefreshCw, Clock, ChevronDown, ChevronUp, PieChart } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
-
-const API_BASE_URL = "http://localhost:4000/api";
+ 
+const API_BASE_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com /api";
 const CATEGORY_ICONS = {
   Food: <Utensils className="w-4 h-4" />,
   Housing: <Home className="w-4 h-4" />,

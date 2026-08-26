@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 const fmt = (n) =>

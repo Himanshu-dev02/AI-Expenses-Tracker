@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { loginStyles } from "../assets/dummyStyles";
 
-const Login = ({ onLogin, API_URL = "http://localhost:4000" }) => {
+const Login = ({ onLogin, API_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com" }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
