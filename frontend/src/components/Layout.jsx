@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import {styles} from "../assets/dummyStyles";
+import { styles } from "../assets/dummyStyles";
 import Navbar from "./Navbar";
- 
+
 import Sidebar from "./Sidebar";
 import { ArrowUp, ArrowDown, Activity, Car, CreditCard, DollarSign, Gift, Home, PiggyBank, ShoppingCart, TrendingUp, Utensils, Zap, RefreshCw, Clock, ChevronDown, ChevronUp, PieChart } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
- 
-const API_BASE_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com /api";
+
+const API_BASE_URL = "https://ai-expenses-tracker-backend-3u7r.onrender.com/api";
 const CATEGORY_ICONS = {
   Food: <Utensils className="w-4 h-4" />,
   Housing: <Home className="w-4 h-4" />,
@@ -36,9 +36,10 @@ const filterTransactions = (transactions, frame) => {
       return transactions.filter((t) => new Date(t.date) >= startOfWeek);
     }
     case "monthly":
-      return transactions.filter(
-        (t) => new Date(t.date).getMonth() === now.getMonth()
-      );
+      return transactions.filter((t) => {
+        const d = new Date(t.date);
+        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      });
     default:
       return transactions;
   }
@@ -55,21 +56,21 @@ const safeArrayFromResponse = (res) => {
 };
 
 const Layout = ({ onLogout, user }) => {
-   const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [timeFrame, setTimeFrame] = useState("monthly");
   const [loading, setLoading] = useState(false);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
+
 
   // to fetch the transactions from server
   const fetchTransactions = async () => {
     try {
       setLoading(true);
       const token =
-  localStorage.getItem("token") ||
-  sessionStorage.getItem("token");
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
       const [incomeRes, expenseRes] = await Promise.all([
@@ -114,9 +115,9 @@ const Layout = ({ onLogout, user }) => {
 
   const addTransaction = async (transaction) => {
     try {
-     const token =
-  localStorage.getItem("token") ||
-  sessionStorage.getItem("token");
+      const token =
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint =
         transaction.type === "income" ? "income/add" : "expense/add";
@@ -136,9 +137,9 @@ const Layout = ({ onLogout, user }) => {
 
   const editTransaction = async (id, transaction) => {
     try {
-     const token =
-  localStorage.getItem("token") ||
-  sessionStorage.getItem("token");
+      const token =
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint =
         transaction.type === "income" ? "income/update" : "expense/update";
@@ -161,8 +162,8 @@ const Layout = ({ onLogout, user }) => {
   const deleteTransaction = async (id, type) => {
     try {
       const token =
-  localStorage.getItem("token") ||
-  sessionStorage.getItem("token");
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint = type === "income" ? "income/delete" : "expense/delete";
       await axios.delete(`${API_BASE_URL}/${endpoint}/${id}`, { headers });
@@ -217,8 +218,8 @@ const Layout = ({ onLogout, user }) => {
     const savingsRate =
       last30DaysIncome > 0
         ? Math.round(
-            ((last30DaysIncome - last30DaysExpenses) / last30DaysIncome) * 100
-          )
+          ((last30DaysIncome - last30DaysExpenses) / last30DaysIncome) * 100
+        )
         : 0;
 
     const last60DaysAgo = new Date(now);
@@ -236,10 +237,10 @@ const Layout = ({ onLogout, user }) => {
     const expenseChange =
       previous30DaysExpenses > 0
         ? Math.round(
-            ((last30DaysExpenses - previous30DaysExpenses) /
-              previous30DaysExpenses) *
-              100
-          )
+          ((last30DaysExpenses - previous30DaysExpenses) /
+            previous30DaysExpenses) *
+          100
+        )
         : 0;
 
     return {
@@ -261,13 +262,14 @@ const Layout = ({ onLogout, user }) => {
       timeFrame === "daily"
         ? "Today"
         : timeFrame === "weekly"
-        ? "This Week"
-        : "This Month",
+          ? "This Week"
+          : "This Month",
     [timeFrame]
   );
 
   const outletContext = {
-    transactions: filteredTransactions,
+    transactions: transactions,
+    filteredTransactions,
     addTransaction,
     editTransaction,
     deleteTransaction,
@@ -300,230 +302,230 @@ const Layout = ({ onLogout, user }) => {
   const displayedTransactions = showAllTransactions
     ? transactions
     : transactions.slice(0, 4);
-  
+
   return (
     <div className={styles.layout.root}>
-       <Navbar user={user} onLogout={onLogout}/>
-        <Sidebar user={user} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-       
+      <Navbar user={user} onLogout={onLogout} />
+      <Sidebar user={user} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
 
-        <div className={styles.layout.mainContainer(sidebarCollapsed)}>
-          <div className={styles.header.Container}>
+
+      <div className={styles.layout.mainContainer(sidebarCollapsed)}>
+        <div className={styles.header.Container}>
           <div>
             <h1 className={styles.header.title}>Dashboard</h1>
             <p className={styles.header.subtitle}>Welcome Back </p>
           </div>
+        </div>
+        <div className={styles.statCards.grid}>
+          <div className={styles.statCards.card}>
+            <div className={styles.statCards.cardHeader}>
+              <div>
+                <p className={styles.statCards.cardTitle}>Total Balance</p>
+                <p className={styles.statCards.cardValue}>$ {stats.allTimeSavings.toLocaleString("en-US", {
+                  maximumFractionDigits: 2,
+                })}</p>
+              </div>
+              <div className={styles.statCards.iconContainer("teal")}>
+                <DollarSign className={styles.statCards.icon("teal")} />
+              </div>
+            </div>
+            <p className={styles.statCards.cardFooter}>
+              <span className="text-teal-600 font-medium">
+                +$ {stats.last30DaysSavings.toLocaleString()}
+              </span>{" "}
+              this month
+            </p>
           </div>
-          <div className={styles.statCards.grid}>
-            <div className={styles.statCards.card}>
-              <div className={styles.statCards.cardHeader}>
-                <div>
-                  <p className={styles.statCards.cardTitle}>Total Balance</p>
-                  <p className={styles.statCards.cardValue}>$ {stats.allTimeSavings.toLocaleString("en-US",{
-                    maximumFractionDigits: 2,
-                  })}</p>
-                </div>
-                <div className={styles.statCards.iconContainer("teal")}>
-                 <DollarSign className={styles.statCards.icon("teal")}/>
-                </div>
+          {/*for income */}
+          <div className={styles.statCards.card}>
+            <div className={styles.statCards.cardHeader}>
+              <div>
+                <p className={styles.statCards.cardTitle}>Monthly Income</p>
+                <p className={styles.statCards.cardValue}>$ {stats.last30DaysIncome.toLocaleString("en-US", {
+                  maximumFractionDigits: 2,
+                })}</p>
               </div>
-              <p className={styles.statCards.cardFooter}>
-                <span className="text-teal-600 font-medium">
-                  +$ {stats.last30DaysSavings.toLocaleString()}
-                </span>{" "}
-                this month
-              </p>
+              <div className={styles.statCards.iconContainer("green")}>
+                <ArrowUp className={styles.statCards.icon("green")} />
+              </div>
             </div>
-            {/*for income */}
-            <div className={styles.statCards.card}>
-              <div className={styles.statCards.cardHeader}>
-                <div>
-                  <p className={styles.statCards.cardTitle}>Monthly Income</p>
-                  <p className={styles.statCards.cardValue}>$ {stats.last30DaysIncome.toLocaleString("en-US",{
-                    maximumFractionDigits: 2,
-                  })}</p>
-                </div>
-                <div className={styles.statCards.iconContainer("green")}>
-                 <ArrowUp className={styles.statCards.icon("green")}/>
-                </div>
-              </div>
-              <p className={styles.statCards.cardFooter}>
-                <span className="text-green-600 font-medium">
-                  +12.5%
-                </span>{" "}
-               from last month
-              </p>
-            </div>
-
-            <div className={styles.statCards.card}>
-              <div className={styles.statCards.cardHeader}>
-                <div>
-                  <p className={styles.statCards.cardTitle}>Monthly Expense</p>
-                  <p className={styles.statCards.cardValue}>$ {stats.last30DaysExpenses.toLocaleString("en-US",{
-                    maximumFractionDigits: 2,
-                  })}</p>
-                </div>
-                <div className={styles.statCards.iconContainer("orange")}>
-                 <ArrowDown className={styles.statCards.icon("orange")}/>
-                </div>
-              </div>
-              <p className={styles.statCards.cardFooter}>
-             <span
-              className={`${styles.colors.expenseChange(
-              stats.expenseChange
-               )} font-medium`}
-                  >
-               {stats.expenseChange > 0 ? "+" : ""}
-              {stats.expenseChange}%
-              </span>{" "} 
+            <p className={styles.statCards.cardFooter}>
+              <span className="text-green-600 font-medium">
+                +12.5%
+              </span>{" "}
               from last month
-              </p>
-            </div>
-             <div className={styles.statCards.card}>
-              <div className={styles.statCards.cardHeader}>
-                <div>
-                  <p className={styles.statCards.cardTitle}>Saving Rate</p>
-                  <p className={styles.statCards.cardValue}>$
-                    {stats.savingsRate}%
-                     </p>
-                </div>
-                <div className={styles.statCards.iconContainer("blue")}>
-                 <PiggyBank className={styles.statCards.icon("blue")}/>
-                </div>
-              </div>
-              <p className={styles.statCards.cardFooter}>
-                 {getSavingsRating(stats.savingsRate)}
-              </p>
-            </div>
+            </p>
           </div>
 
-          <div className={styles.grid.main}>
-            <div className={styles.grid.leftColumn}>
-              <div className={styles.cards.base}>
-                <div className={styles.cards.header}>
-                  <h3 className={styles.cards.title}><TrendingUp className="w-6 h-6 text-teal-500"/>
-                   Financial Overview
-                   <span className= "text-sm text-gray-500 font-normal">
-                    {timeFrameLabel}
-                   </span>
-                  </h3>
+          <div className={styles.statCards.card}>
+            <div className={styles.statCards.cardHeader}>
+              <div>
+                <p className={styles.statCards.cardTitle}>Monthly Expense</p>
+                <p className={styles.statCards.cardValue}>$ {stats.last30DaysExpenses.toLocaleString("en-US", {
+                  maximumFractionDigits: 2,
+                })}</p>
+              </div>
+              <div className={styles.statCards.iconContainer("orange")}>
+                <ArrowDown className={styles.statCards.icon("orange")} />
+              </div>
+            </div>
+            <p className={styles.statCards.cardFooter}>
+              <span
+                className={`${styles.colors.expenseChange(
+                  stats.expenseChange
+                )} font-medium`}
+              >
+                {stats.expenseChange > 0 ? "+" : ""}
+                {stats.expenseChange}%
+              </span>{" "}
+              from last month
+            </p>
+          </div>
+          <div className={styles.statCards.card}>
+            <div className={styles.statCards.cardHeader}>
+              <div>
+                <p className={styles.statCards.cardTitle}>Saving Rate</p>
+                <p className={styles.statCards.cardValue}>$
+                  {stats.savingsRate}%
+                </p>
+              </div>
+              <div className={styles.statCards.iconContainer("blue")}>
+                <PiggyBank className={styles.statCards.icon("blue")} />
+              </div>
+            </div>
+            <p className={styles.statCards.cardFooter}>
+              {getSavingsRating(stats.savingsRate)}
+            </p>
+          </div>
+        </div>
 
-                </div>
-               <Outlet context={outletContext}/>
+        <div className={styles.grid.main}>
+          <div className={styles.grid.leftColumn}>
+            <div className={styles.cards.base}>
+              <div className={styles.cards.header}>
+                <h3 className={styles.cards.title}><TrendingUp className="w-6 h-6 text-teal-500" />
+                  Financial Overview
+                  <span className="text-sm text-gray-500 font-normal">
+                    {timeFrameLabel}
+                  </span>
+                </h3>
+
+              </div>
+              <Outlet context={outletContext} />
+            </div>
+
+          </div>
+          {/* right side*/}
+          <div className={styles.grid.rightColumn}>
+            <div className={styles.cards.base}>
+              <div className={styles.transactions.cardHeader}>
+                <h3 className={styles.transactions.cardTitle}>
+                  <Clock className="w-6 h-6 text-orange-500" />
+                  Recent Transactions
+                </h3>
+                <button onClick={fetchTransactions} disabled={loading}
+                  className={styles.transactions.refreshButton}>
+                  <RefreshCw className={styles.transactions.refreshIcon(loading)} />
+                </button>
               </div>
 
-            </div>
-            {/* right side*/}
-            <div className={styles.grid.rightColumn}>
-              <div className={styles.cards.base}>
-                <div className={styles.transactions.cardHeader}>
-                  <h3 className={styles.transactions.cardTitle}>
-                    <Clock className="w-6 h-6 text-orange-500"/>
-                    Recent Transactions
-                  </h3>
-                  <button onClick={fetchTransactions} disabled={loading} 
-                  className={styles.transactions.refreshButton}>
-                    <RefreshCw className={styles.transactions.refreshIcon(loading)}/>
-                  </button>
-                </div>
-                  
-                  <div className={styles.transactions.dataStackingInfo}>
-                    <div className={styles.transactions.dataStackingIcon}/>
-                    <span>
-                      Transactions are stacked by dtae (newest first)
-                    </span>
-                  </div>
-                   <div className={styles.transactions.listencontainer}>
-                    {displayedTransactions.map((transaction) => {
-                      const{id, description, amount, date, category, type} = transaction;
-                      return(
-                        <div key={id} 
-                        className={styles.transactions.transactionItem}
-                        >
-                          <div className="flex items-center gap-1 md:gap-4 lg:gap-3">
-                          <div 
+              <div className={styles.transactions.dataStackingInfo}>
+                <div className={styles.transactions.dataStackingIcon} />
+                <span>
+                  Transactions are stacked by dtae (newest first)
+                </span>
+              </div>
+              <div className={styles.transactions.listencontainer}>
+                {displayedTransactions.map((transaction) => {
+                  const { id, description, amount, date, category, type } = transaction;
+                  return (
+                    <div key={id}
+                      className={styles.transactions.transactionItem}
+                    >
+                      <div className="flex items-center gap-1 md:gap-4 lg:gap-3">
+                        <div
                           className={`p-2 rounded-lg ${styles.colors.transaction.bg(type)}`}>
-                          {CATEGORY_ICONS[category] || (<DollarSign className={styles.transactions.icon}/>
-                        )}
-                         </div>
+                          {CATEGORY_ICONS[category] || (<DollarSign className={styles.transactions.icon} />
+                          )}
+                        </div>
 
-                         <div className= {styles.transactions.details} >
+                        <div className={styles.transactions.details} >
                           <p className={styles.transactions.description}>
                             {description}
 
                           </p>
-                         <p className={styles.transactions.meta}>
-                          {new Date(date).toLocaleDateString ()}
-                          <span className="ml-2 capitalize">
-                            {category}
-                          </span>
+                          <p className={styles.transactions.meta}>
+                            {new Date(date).toLocaleDateString()}
+                            <span className="ml-2 capitalize">
+                              {category}
+                            </span>
 
-                         </p>
-                         </div>
-                          </div>
-                           <span className={styles.colors.transaction.text(type)}>
-                            {type === "income" ? "+" : "-"}${Number(amount)}
-                           </span>
-                           </div>
-                      );
-                    })}
-                   
-                   {transactions.length === 0 ? (
-                    <div className={styles.transactions.emptyState}>
-                      <div className={styles.transactions.emptyIconContainer}>
-                       <Clock className={styles.transactions.emptyText}/>
+                          </p>
+                        </div>
                       </div>
-                       <p className={styles.transactions.emptyText}>
-                       No recent transaction
-                       </p>
+                      <span className={styles.colors.transaction.text(type)}>
+                        {type === "income" ? "+" : "-"}${Number(amount)}
+                      </span>
                     </div>
-                   ) : (
-                    <div className={styles.transactions.viewAllContainer}>
-                    <button onClick={() => setShowAllTransactions(!showAllTransactions)}
-                    className={styles.transactions.viewAllButton}
-                    > 
-                    {showAllTransactions ? (
-                      <>
-                      <ChevronUp className="w-5 h-5"/>
-                      Show Less
-                      </>) :(
-                        <>
-                        <ChevronDown className="w-5 h-5"/>
-                        View All Transactions ({transactions.length})
-                        </>
-                    )}
-                    </button>
-                    </div>
-                   )}
-                </div>
-               </div>
+                  );
+                })}
 
-               {/* spending by category card */ }
-               <div className={styles.cards.base}>
-                <h3 className ={styles.categories.title}>
-                  <PieChart className={styles.categories.titleIcon}/>
-                  Spending by Category
-                </h3>
-               <div className={styles.categories.list}>
+                {transactions.length === 0 ? (
+                  <div className={styles.transactions.emptyState}>
+                    <div className={styles.transactions.emptyIconContainer}>
+                      <Clock className={styles.transactions.emptyText} />
+                    </div>
+                    <p className={styles.transactions.emptyText}>
+                      No recent transaction
+                    </p>
+                  </div>
+                ) : (
+                  <div className={styles.transactions.viewAllContainer}>
+                    <button onClick={() => setShowAllTransactions(!showAllTransactions)}
+                      className={styles.transactions.viewAllButton}
+                    >
+                      {showAllTransactions ? (
+                        <>
+                          <ChevronUp className="w-5 h-5" />
+                          Show Less
+                        </>) : (
+                        <>
+                          <ChevronDown className="w-5 h-5" />
+                          View All Transactions ({transactions.length})
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* spending by category card */}
+            <div className={styles.cards.base}>
+              <h3 className={styles.categories.title}>
+                <PieChart className={styles.categories.titleIcon} />
+                Spending by Category
+              </h3>
+              <div className={styles.categories.list}>
                 {topCategories.map(([category, amount]) => (
                   <div key={category} className={styles.categories.categoryitem}>
-                    <div className= "flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                       <div className={styles.categories.categoryIconContainer}>
                         {CATEGORY_ICONS[category] || (
-                          <DollarSign className={styles.categories.categoryIcon}/>
+                          <DollarSign className={styles.categories.categoryIcon} />
                         )}
                       </div>
                       <span className={styles.categories.categoryName}>
-                          {category}
-                        </span>
+                        {category}
+                      </span>
                     </div>
                     <span className={styles.categories.categoryAmount}>
-                     ${amount}
+                      ${amount}
                     </span>
                   </div>
                 ))}
-               </div>
-               <div className={styles.categories.summaryContainer}>
+              </div>
+              <div className={styles.categories.summaryContainer}>
                 <div className={styles.categories.summaryGrid}>
                   <div className={styles.categories.summaryIncomeCard}>
                     <p className={styles.categories.summaryTitle}>
@@ -543,13 +545,13 @@ const Layout = ({ onLogout, user }) => {
                   </div>
                 </div>
 
-               </div>
+              </div>
 
-               </div>
             </div>
           </div>
         </div>
-        
+      </div>
+
     </div>
   );
 };

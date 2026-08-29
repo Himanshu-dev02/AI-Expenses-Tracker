@@ -218,15 +218,9 @@ const Dashboard = () => {
     [filteredTransactions]
   );
 
-  const incomeListForDisplay =
-    timeFrame === "monthly" && serverRecentIncome.length > 0
-      ? serverRecentIncome
-      : incomeTransactions;
+  const incomeListForDisplay = incomeTransactions.length > 0 ? incomeTransactions : serverRecentIncome;
 
-  const expenseListForDisplay =
-    timeFrame === "monthly" && serverRecentExpense.length > 0
-      ? serverRecentExpense
-      : expenseTransactions;
+  const expenseListForDisplay = expenseTransactions.length > 0 ? expenseTransactions : serverRecentExpense;
 
   const displayedIncome = showAllIncome
     ? incomeListForDisplay
@@ -425,7 +419,7 @@ const Dashboard = () => {
           <div className={dashboardStyles.arrowDownIconContainer}>
             <ArrowDown className=" w-5 h-5 text-orange-600" />
           </div>
-        } label={`${timeFrameRange.label} Expenses`} value={`${Math.round(displayIncome - displayExpenses).toLocaleString()}`}
+        } label={`${timeFrameRange.label} Expenses`} value={`${Math.round(displayExpenses).toLocaleString()}`}
           additionalContent={
             <div
               className={`mt-2 text-xs flex items-center gap-1 ${expenseChange >= 0 ? trendStyles.positive : trendStyles.negative
