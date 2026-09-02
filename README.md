@@ -12,7 +12,7 @@
 
 **A powerful, full-stack web application for intelligent expense tracking with real-time analytics, receipt scanning, and comprehensive financial dashboards.**
 
-[Live Demo](#) • [Documentation](#documentation) • [Getting Started](#-quick-start) • [Contributing](#-contributing)
+[Live Demo](https://ai-expenses-tracker-frontend-mgfb.onrender.com) • [Documentation](#documentation) • [Getting Started](#-quick-start) • [Contributing](#-contributing)
 
 </div>
 
