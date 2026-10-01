@@ -10,9 +10,9 @@
 [![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)](#)
 [![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)](#)
 
-**A powerful, full-stack web application for intelligent expense tracking with real-time analytics, receipt scanning, and comprehensive financial dashboards.**
+**A full-stack expense tracker with AI-powered receipt scanning, next-month spending predictions, and a financial analytics dashboard.**
 
-[Live Demo](https://ai-expenses-tracker-frontend-mgfb.onrender.com) • [Documentation](#documentation) • [Getting Started](#-quick-start) • [Contributing](#-contributing)
+[Live Demo](https://ai-expenses-tracker-frontend-mgfb.onrender.com) • [API Endpoints](#-api-endpoints) • [Quick Start](#-quick-start)
 
 </div>
 
@@ -20,30 +20,28 @@
 
 ## ✨ Highlights
 
-- 🎯 **Smart Expense Management** - Categorize, track, and analyze expenses in real-time
-- 📊 **Interactive Dashboards** - Beautiful charts and gauges for financial insights
-- 🧾 **Receipt Scanner** - OCR-powered receipt scanning and automatic data extraction
-- 👤 **Secure Authentication** - JWT-based authentication with bcrypt password hashing
-- 📈 **Advanced Analytics** - Time-series analysis with daily/weekly/monthly/yearly views
-- 📥 **Excel Export** - Download transaction data for further analysis
-- 🎨 **Responsive Design** - Mobile-friendly UI with Tailwind CSS
-- ⚡ **Real-time Updates** - Instant synchronization across all dashboard metrics
+- 🎯 **Smart Expense Management** — categorize, track, and update expenses and income
+- 📊 **Interactive Dashboards** — charts and gauges built with Recharts
+- 🧾 **AI Receipt Scanner** — Google Gemini vision extracts amount, merchant, category, and date from a photo, with confidence scoring and a local Tesseract OCR fallback if the AI call fails
+- 🔮 **Spending Prediction** — Gemini-powered next-month, per-category forecast based on 6 months of MongoDB aggregated history
+- 👤 **JWT Authentication** — bcrypt-hashed passwords, token-based sessions
+- 📥 **Excel Export** — download transaction history via the `xlsx` library
+- 💡 **Budget Alerts** — client-side comparison of predicted spend against a user-set threshold
+- 🎨 **Responsive UI** — Tailwind CSS, Framer Motion
 
 ---
 
 ## 📋 Table of Contents
 
-- [Features](#-key-features)
+- [Key Features](#-key-features)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
 - [Quick Start](#-quick-start)
-- [Installation](#-installation--setup)
-- [API Documentation](#-api-endpoints)
-- [Configuration](#-environment-variables)
-- [Development](#-development-workflow)
-- [Screenshots](#-screenshots)
+- [API Endpoints](#-api-endpoints)
+- [Environment Variables](#-environment-variables)
+- [Known Limitations](#-known-limitations--roadmap)
 - [Contributing](#-contributing)
-- [Support](#-support)
+- [Author](#-author)
 
 ---
 
@@ -51,68 +49,56 @@
 
 ### 💳 Transaction Management
 - ✅ Create, read, update, and delete expenses & income
-- ✅ Categorize transactions with custom tags
-- ✅ Date-based filtering and sorting
-- ✅ Real-time transaction validation
+- ✅ Categorize transactions
+- ✅ Date-range filtering (`/overview` endpoints)
+- ✅ Required-field validation, client-side and server-side
 
 ### 📊 Analytics & Reporting
-- ✅ Comprehensive financial dashboard
-- ✅ Expense vs Income comparison charts
-- ✅ Spending gauge charts with targets
-- ✅ Time-frame selection (Daily/Weekly/Monthly/Yearly)
-- ✅ Category-wise expense breakdown
-- ✅ Summary cards for quick insights
+- ✅ Dashboard combining income + expense for a selected period
+- ✅ Savings-rate and category-breakdown calculations
+- ✅ Time-frame comparison (current vs previous period) via `useMemo`-derived stats
+- ✅ Excel export per transaction type
 
 ### 🔐 User Management
-- ✅ Secure registration and login
-- ✅ JWT token-based session management
-- ✅ Profile management
-- ✅ Secure password change functionality
-- ✅ Password hashing with bcrypt
+- ✅ Registration and login with bcrypt password hashing
+- ✅ JWT session tokens (24h expiry)
+- ✅ Profile update and password change, both auth-protected
 
-### 🧾 Advanced Features
-- ✅ Receipt scanning with OCR
-- ✅ Automatic data extraction from receipts
-- ✅ Excel export functionality
-- ✅ Budget tracking
-- ✅ Spending notifications
+### 🧾 AI Features
+- ✅ Receipt photo upload → Sharp image compression → Gemini vision extraction → optional auto-save as an expense
+- ✅ Fallback to Tesseract.js + regex parsing if the Gemini call fails
+- ✅ 6-month spending history aggregation (MongoDB pipeline) feeding a Gemini-generated next-month forecast per category, with trend, confidence, and a savings tip
+- ✅ Budget threshold set and compared client-side against the predicted total (not yet persisted server-side — see [Known Limitations](#-known-limitations--roadmap))
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Backend
-<div align="center">
-
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| **Runtime** | Node.js | 18+ |
-| **Framework** | Express.js | 5.1 |
-| **Database** | MongoDB | Latest |
-| **ORM** | Mongoose | 8.16 |
-| **Authentication** | JWT | 9.0 |
-| **Security** | Bcryptjs | 3.0 |
-| **Utilities** | CORS, dotenv, validator, XLSX | Latest |
-
-</div>
+| Component | Technology |
+|-----------|-----------|
+| **Runtime** | Node.js 18+ |
+| **Framework** | Express.js 5.1 |
+| **Database** | MongoDB (Atlas) via Mongoose 8.16 |
+| **Auth** | JWT 9.0 + bcryptjs 3.0 |
+| **AI** | Google Gemini API (vision + text) |
+| **Image processing** | Sharp |
+| **File uploads** | Multer |
+| **Reports** | xlsx |
+| **Utilities** | CORS, dotenv, validator |
 
 ### Frontend
-<div align="center">
-
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| **Library** | React | 19.2 |
-| **Build Tool** | Vite | 7.2 |
-| **Styling** | Tailwind CSS | 4.3 |
-| **Routing** | React Router DOM | 7.18 |
-| **HTTP Client** | Axios | 1.18 |
-| **Charts** | Recharts | 3.9 |
-| **Icons** | Lucide React | Latest |
-| **Animations** | Framer Motion | 12.40 |
-| **Notifications** | React Toastify | 11.1 |
-| **Linting** | ESLint | 9.39 |
-
-</div>
+| Component | Technology |
+|-----------|-----------|
+| **Library** | React 19.2 |
+| **Build Tool** | Vite 7.2 |
+| **Styling** | Tailwind CSS 4.3 |
+| **Routing** | React Router DOM 7.18 |
+| **HTTP Client** | Axios 1.18 |
+| **Charts** | Recharts 3.9 |
+| **Icons** | Lucide React |
+| **Animations** | Framer Motion 12.40 |
+| **Notifications (UI toasts)** | React Toastify 11.1 |
 
 ---
 
@@ -120,58 +106,58 @@
 
 ```
 AI-Expenses-Tracker/
-├── 📦 backend/                              # Node.js/Express API Server
-│   ├── 📄 server.js                         # Main server entry point
+├── 📦 backend/
+│   ├── 📄 server.js                         # Express app entry, mounts all routers
 │   ├── 📂 config/
-│   │   └── db.js                            # MongoDB configuration
-│   ├── 📂 controllers/                      # Business logic handlers
-│   │   ├── dashboardController.js           # Dashboard aggregation
-│   │   ├── expenseController.js             # Expense CRUD
-│   │   ├── incomeController.js              # Income CRUD
-│   │   ├── receiptController.js             # Receipt scanning
-│   │   └── userController.js                # Authentication
+│   │   └── db.js                            # MongoDB connection
+│   ├── 📂 controllers/
+│   │   ├── dashboardController.js           # Combined income/expense summary
+│   │   ├── expenseController.js             # Expense CRUD + Excel export
+│   │   ├── incomeController.js              # Income CRUD + Excel export
+│   │   ├── predictionController.js          # 6-month aggregation + Gemini forecast
+│   │   ├── receiptController.js             # Gemini vision scan + Tesseract fallback
+│   │   └── userController.js                # Register/login/profile
 │   ├── 📂 middleware/
-│   │   ├── auth.js                          # JWT middleware
-│   │   └── receiptMiddleware.js             # Receipt handling
-│   ├── 📂 models/                           # Mongoose schemas
+│   │   ├── auth.js                          # JWT verification
+│   │   └── receiptUpload.js                 # Multer config (type/size limits)
+│   ├── 📂 models/
 │   │   ├── expenseModel.js
 │   │   ├── incomeModel.js
 │   │   └── userModel.js
-│   ├── 📂 routes/                           # API endpoints
+│   ├── 📂 routes/
 │   │   ├── dashboardRoutes.js
 │   │   ├── expenseRoute.js
 │   │   ├── incomeRoute.js
-│   │   ├── userRoute.js
-│   │   └── receiptRoute.js
+│   │   ├── predictionRoute.js
+│   │   ├── receiptRoute.js
+│   │   └── userRoute.js
 │   └── 📂 utils/
-│       └── dateFilter.js                    # Date utilities
+│       └── dateFilter.js                    # Shared date-range helper
 │
-├── 🎨 frontend/                             # React + Vite Application
-│   ├── 📄 vite.config.js                    # Vite configuration
-│   ├── 📄 index.html                        # HTML entry point
+├── 🎨 frontend/
+│   ├── 📄 vite.config.js
 │   ├── 📂 src/
-│   │   ├── App.jsx                          # Main component
-│   │   ├── 📂 components/                   # Reusable components
+│   │   ├── App.jsx                          # Routing + auth bootstrap
+│   │   ├── 📂 components/
 │   │   │   ├── Add.jsx                      # Add transaction modal
-│   │   │   ├── FinancialCard.jsx            # Summary cards
-│   │   │   ├── GaugeCard.jsx                # Gauge charts
-│   │   │   ├── Login.jsx                    # Login form
-│   │   │   ├── Navbar.jsx                   # Navigation
-│   │   │   ├── ReceiptScanner.jsx           # Receipt scanner
-│   │   │   ├── Sidebar.jsx                  # Sidebar nav
-│   │   │   ├── Signup.jsx                   # Registration
-│   │   │   └── Transactionitem.jsx          # Transaction list
-│   │   ├── 📂 pages/                        # Page components
+│   │   │   ├── FinancialCard.jsx
+│   │   │   ├── GaugeCard.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Navbar.jsx / Sidebar.jsx
+│   │   │   ├── ReceiptScanner.jsx           # Upload + review extracted data
+│   │   │   ├── SpendingPrediction.jsx       # Forecast chart + budget alert
+│   │   │   ├── Signup.jsx
+│   │   │   └── Transactionitem.jsx
+│   │   ├── 📂 pages/
 │   │   │   ├── Dashboard.jsx
 │   │   │   ├── Expense.jsx
 │   │   │   ├── Income.jsx
 │   │   │   └── Profile.jsx
-│   │   ├── 📂 assets/                       # Themes & assets
-│   │   ├── 📂 utils/                        # Helper functions
-│   │   └── index.css                        # Global styles
-│   └── 📂 public/                           # Static files
+│   │   ├── 📂 assets/                       # Styles, icon maps
+│   │   └── index.css
+│   └── 📂 public/
 │
-└── 📄 README.md                             # This file
+└── 📄 README.md
 ```
 
 ---
@@ -179,343 +165,148 @@ AI-Expenses-Tracker/
 ## 🚀 Quick Start
 
 ### Prerequisites
+- Node.js v18+
+- npm
+- MongoDB instance (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+- A [Google Gemini API key](https://ai.google.dev/) for receipt scanning and predictions
 
-Before you begin, ensure you have the following installed:
-
-- **Node.js** v18.0 or higher ([Download](https://nodejs.org/))
-- **npm** or **yarn** package manager
-- **MongoDB** instance (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
-
-### Step 1: Clone the Repository
-
+### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/AI-Expenses-Tracker.git
+git clone https://github.com/Himanshu-dev02/AI-Expenses-Tracker.git
 cd AI-Expenses-Tracker
 ```
 
-### Step 2: Backend Setup
-
+### 2. Backend setup
 ```bash
-# Navigate to backend directory
 cd backend
-
-# Install dependencies
 npm install
-
-# Create .env file
-cat > .env << EOF
-PORT=4000
-MONGODB_URI=mongodb://localhost:27017/expenses-tracker
-JWT_SECRET=your_super_secret_jwt_key_here
-JWT_EXPIRE=7d
-NODE_ENV=development
-EOF
-
- 
 ```
 
-✅ Backend running at `http://localhost:4000`
-
-### Step 3: Frontend Setup
-
+Create a `.env` file in `backend/` (see [Environment Variables](#-environment-variables)), then:
 ```bash
-# Navigate to frontend directory (from project root)
+npm start
+```
+✅ Backend runs at `http://localhost:4000`
+
+### 3. Frontend setup
+```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
-
-✅ Frontend running at `http://localhost:5173`
-
- 
----
-
-## 📦 Installation & Setup
-
-### Detailed Backend Setup
-
-#### 1. Environment Configuration
-
-Create a `.env` file in the `backend` directory:
-
-```env
-# Server Configuration
-PORT=4000
-NODE_ENV=development
-
-# Database Configuration
-MONGODB_URI=mongodb://localhost:27017/expenses-tracker
-# OR for MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/expenses-tracker
-
-# JWT Configuration
-JWT_SECRET=your_jwt_secret_key_minimum_32_characters
-JWT_EXPIRE=7d
-
-# CORS Configuration (Optional)
-CORS_ORIGIN=http://localhost:5173
-```
-
- 
- 
-
+✅ Frontend runs at `http://localhost:5173`
 
 ---
 
 ## 📡 API Endpoints
 
-### Authentication Endpoints
+All routes except register/login require an `Authorization: Bearer <token>` header.
 
+### Auth — `/api/user`
 ```http
-POST   /api/user/signup              # Register new user
-POST   /api/user/login               # User login
-GET    /api/user/me                  # Get current user (⚠️ Auth required)
-PUT    /api/user/profile             # Update profile (⚠️ Auth required)
-PUT    /api/user/password            # Change password (⚠️ Auth required)
+POST   /api/user/register            # Create account
+POST   /api/user/login               # Get JWT
+GET    /api/user/me                  # Current user
+PUT    /api/user/profile             # Update name/email
+PUT    /api/user/password            # Change password
 ```
 
-### Expense Endpoints
-
+### Expenses — `/api/expense`
 ```http
-GET    /api/expense                  # List expenses (⚠️ Auth required)
-POST   /api/expense                  # Create expense (⚠️ Auth required)
-PUT    /api/expense/:id              # Update expense (⚠️ Auth required)
-DELETE /api/expense/:id              # Delete expense (⚠️ Auth required)
+POST   /api/expense/add
+GET    /api/expense/get
+GET    /api/expense/overview         # Date-ranged totals
+GET    /api/expense/downloadexcel
+PUT    /api/expense/update/:id
+DELETE /api/expense/delete/:id
 ```
 
-* 
-
-### Income Endpoints
-
+### Income — `/api/income`
 ```http
-GET    /api/income                   # List income entries (⚠️ Auth required)
-POST   /api/income                   # Create income (⚠️ Auth required)
-PUT    /api/income/:id               # Update income (⚠️ Auth required)
-DELETE /api/income/:id               # Delete income (⚠️ Auth required)
+POST   /api/income/add
+GET    /api/income/get
+GET    /api/income/overview
+GET    /api/income/downloadexcel
+PUT    /api/income/update/:id
+DELETE /api/income/delete/:id
 ```
 
-### Dashboard Endpoints
-
+### Dashboard — `/api/dashboard`
 ```http
-GET    /api/dashboard/summary        # Financial summary (⚠️ Auth required)
-GET    /api/dashboard/analytics      # Analytics data (⚠️ Auth required)
-GET    /api/dashboard/charts         # Chart data (⚠️ Auth required)
+GET    /api/dashboard/               # Combined summary for a period
 ```
 
-### Receipt Endpoints
-
+### Receipt — `/api/receipt`
 ```http
-POST   /api/receipt/upload           # Upload & scan receipt (⚠️ Auth required)
-GET    /api/receipt/:id              # Get receipt details (⚠️ Auth required)
-DELETE /api/receipt/:id              # Delete receipt (⚠️ Auth required)
+POST   /api/receipt/scan             # multipart "receipt" field; ?save=true to auto-save
+```
+
+### Prediction — `/api/prediction`
+```http
+GET    /api/prediction/spending      # Raw 6-month aggregated history
+GET    /api/prediction/next-month    # Gemini-generated forecast
 ```
 
 ---
- 
 
-### Frontend Configuration
+## ⚙️ Environment Variables
 
-API endpoints are configured in component files or `.env`:
+**`backend/.env`**
+```env
+PORT=4000
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/expenses-tracker
+JWT_SECRET=replace_with_a_long_random_value
+GEMINI_API_KEY=your_gemini_api_key
+NODE_ENV=development
+```
 
+> ⚠️ **Note:** the current codebase has `JWT_SECRET` and `TOKEN_EXPIRY` hardcoded directly in `userController.js`/`auth.js` rather than read from `process.env`. Wiring these to the `.env` value above is a pending fix — don't rely on the `.env` value alone until that's done.
+
+**`frontend/.env`** *(not yet wired into the code — the API base URL is currently hardcoded per-file; see Known Limitations)*
 ```env
 VITE_API_BASE_URL=http://localhost:4000/api
-VITE_APP_NAME=AI Expenses Tracker
 ```
 
- 
- 
-
-### 2. Development Features
-
-- ✅ **Hot Module Replacement (HMR)** - Frontend changes auto-reload
-- ✅ **Nodemon** - Backend auto-restarts on file changes
-- ✅ **Source Maps** - Easy debugging in browser DevTools
-- ✅ **Vite** - Lightning-fast development server
-
- 
-
- 
- 
 ---
 
-## 🖼️ Screenshots
+## 🔒 Known Limitations & Roadmap
 
-### Dashboard
-```
-[Beautiful dashboard with expense charts, income overview, and spending gauges]
-```
+Being upfront about the current state rather than overstating it:
 
-### Expense Management
-```
-[Expense listing, categorization, and quick add interface]
-```
+- [ ] `JWT_SECRET` is hardcoded in source instead of loaded from `.env` — needs to move to `process.env.JWT_SECRET`
+- [ ] Delete endpoints (`expense`/`income`) don't verify the record belongs to the requesting user — needs the same ownership filter already used in `update`
+- [ ] No pagination on list endpoints (`/get`) — fine at small scale, needs `limit`/`skip` before real growth
+- [ ] `API_BASE_URL` is duplicated as a hardcoded string across several frontend files instead of a single configured Axios instance
+- [ ] Budget threshold is stored in `localStorage`, not persisted per-user on the backend, so it doesn't follow the user across devices
+- [ ] No rate limiting on auth routes or the Gemini-backed endpoints
+- [ ] No automated tests yet
 
-### Receipt Scanner
-```
-[Receipt upload interface with automatic data extraction]
-```
+Planned next: fix the two security items above first, then centralize the frontend API client, then add pagination and rate limiting.
 
-### Analytics
-```
-[Time-series charts and financial analytics]
-```
-
- 
- 
- 
-
- 
- 
-
- 
-
- 
- 
-
-### Authentication Flow
-
-```
-1. User submits credentials
-   ↓
-2. Validate against database
-   ↓
-3. Generate JWT token
-   ↓
-4. Send token to client
-   ↓
-5. Client stores in localStorage
-   ↓
-6. Include token in API requests
-```
- 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Here's how to get started:
+1. Fork the repo
+2. `git checkout -b feature/your-feature`
+3. Commit with a conventional prefix (`feat:`, `fix:`, `docs:`, `refactor:`)
+4. Push and open a Pull Request with a clear description
 
-### 1. Fork the Repository
-
-Click the "Fork" button at the top right of this page.
-
-### 2. Create a Feature Branch
-
-```bash
-git checkout -b feature/amazing-feature
-```
-
-### 3. Make Your Changes
-
-- Follow existing code style
-- Add comments for complex logic
-- Update README if needed
-
-### 4. Commit Your Changes
-
-```bash
-git add .
-git commit -m "feat: add amazing feature"
-```
-
-Use conventional commits:
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation
-- `style:` - Code style changes
-- `refactor:` - Code refactoring
-- `test:` - Adding tests
-
-### 5. Push to Your Fork
-
-```bash
-git push origin feature/amazing-feature
-```
-
-### 6. Open a Pull Request
-
-- Provide clear description
-- Link related issues
-- Include screenshots if applicable
-
----
-
-## 📝 Code Style
-
-This project uses:
-- **ESLint** for JavaScript linting
-- **Prettier** for code formatting (recommended)
-
- 
-
-## 🔒 Security
-
-### Best Practices
-
-- ✅ Never commit `.env` files
-- ✅ Use strong JWT secrets (minimum 32 characters)
-- ✅ Hash passwords with bcrypt
-- ✅ Validate all user inputs
-- ✅ Use HTTPS in production
-- ✅ Keep dependencies updated
-- ✅ Implement rate limiting
-
- 
- 
- 
 ---
 
 ## 👨‍💻 Author
 
 **Himanshu Meshram**
-- 🔗 Portfolio: [portfolio.com](https://himanshumeshram.netlify.app/)
-- 💼 LinkedIn: [linkedin.com](www.linkedin.com/in/himanshu-meshram-hm)
-- 📧 Email: [EMAIL_ADDRESS](meshramhimanshu20@gmail.com)
-
----
-
- 
-
- 
- 
-
-## 📊 Project Statistics
-
-- 📦 **Dependencies**: 30+
-- 📄 **Lines of Code**: 5000+
-- 🧪 **Test Coverage**: Configurable
-- ⭐ **Stars**: [Help us grow!](#)
-
----
-
- 
-
-## ⭐ Show Your Support
-
-If you find this project helpful, please give it a star! It helps others discover the project and motivates development.
-
-```
-If this project helped you, please consider:
-⭐ Starring this repository
-🐦 Sharing with your network
-📝 Writing a review
-🤝 Contributing improvements
-```
+- Portfolio: [himanshumeshram.netlify.app](https://himanshumeshram.netlify.app/)
+- LinkedIn: [linkedin.com/in/himanshu-meshram-hm](https://www.linkedin.com/in/himanshu-meshram-hm)
+- Email: meshramhimanshu20@gmail.com
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by [Himasnu Meshram]**
+**Made with ❤️ by Himanshu Meshram**
 
 [⬆ Back to top](#-ai-expenses-tracker)
 
- 
-
- 
-
 </div>
- 
