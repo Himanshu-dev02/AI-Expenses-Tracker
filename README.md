@@ -1,5 +1,7 @@
 # 💰 AI Expenses Tracker
 
+![Invoice Generator Cover](./frontend/src/assets/Hero1.png)
+
 <div align="center">
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-green?style=flat-square&logo=node.js)](https://nodejs.org/)
@@ -81,7 +83,7 @@
 | **Framework** | Express.js 5.1 |
 | **Database** | MongoDB (Atlas) via Mongoose 8.16 |
 | **Auth** | JWT 9.0 + bcryptjs 3.0 |
-| **AI** | Google Gemini API (vision + text) |
+| **AI** | Google Gemini API (vision + text) | 
 | **Image processing** | Sharp |
 | **File uploads** | Multer |
 | **Reports** | xlsx |
@@ -284,6 +286,17 @@ Being upfront about the current state rather than overstating it:
 Planned next: fix the two security items above first, then centralize the frontend API client, then add pagination and rate limiting.
 
 ---
+
+
+## 📸 Screenshots
+
+| Dashboard View | Income Overview |
+| :---: | :---: |
+| ![Dashboard Placeholder](./frontend/src/assets/Finance.png) | ![Income Overview](./frontend/src/assets/Income.png) |
+
+| Expenses Overview |  Profile Overview  |
+| :---: | :---: |
+| ![Expenses Overview  ](./frontend/src/assets/Expenses.png) | ![Profile ovewrview](./frontend/src/assets/Profile.png) |
 
 ## 🤝 Contributing
 
